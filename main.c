@@ -39,7 +39,6 @@ int main()
         cut_ext(temp);
         dir_name[i] = (char*)malloc(strlen(temp) + 1);
         strcpy(dir_name[i], temp);
-        printf("\"%s\"\n", dir_name[i]);
         i++;
     }
 
@@ -51,4 +50,25 @@ int main()
         return -1;
     }
     dir_name = h;
+
+    system("clear");
+    theme_menu(dir_name, value_dic);
+    printf("Please, choose theme for your game.\n");
+
+    char choice[255];
+    int a = 0;
+
+    while (fgets(choice, 255, stdin)) { // можно проверять на правильность
+        if (check_digit(choice, strlen(choice)) == -1) {
+            printf("It isn't correct punct of menu. Try again.\n");
+            continue;
+        }
+        a = atoi(choice);
+        if (a > value_dic) {
+            printf("It isn't correct punct of menu. Try again.\n");
+        } else {
+            break;
+        }
+    }
+    printf("%s\n", choice); // вывод выбора
 }
