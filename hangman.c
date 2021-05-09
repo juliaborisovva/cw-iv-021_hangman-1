@@ -60,3 +60,43 @@ void free_mem(char** dir_name, int value_dic, char** words, int value_words)
     }
     free(words);
 }
+
+int choice_theme(int value_dic)
+{
+    char choice[255];
+    int theme = 0;
+
+    while (fgets(choice, 255, stdin)) { // можно проверять на правильность
+        if (check_digit(choice, strlen(choice)) == -1) {
+            return -1;
+        }
+        theme = atoi(choice);
+        if (theme > value_dic) {
+            return -1;
+        } else {
+            break;
+        }
+    }
+    return theme;
+}
+
+int get_rand(int min, int max)
+{
+    return (int)rand() / (RAND_MAX + 1.0) * (max - min) + min;
+}
+
+int fill_arr(char* empty, int length, char* symbols)
+{
+    if (strlen(symbols) == 1) {
+        for (int i = 0; i < length; i++) {
+            empty[i] = symbols[0];
+        }
+    } else {
+        for (int i = 0; i < length; i++) {
+            empty[i] = symbols[i];
+        }
+    }
+    empty[length] = '\0';
+
+    return 0;
+}
