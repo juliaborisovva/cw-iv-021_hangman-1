@@ -3,10 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 int main()
 {
     int exit_condition = 1;
+    srand(time(NULL));
 
     while (exit_condition) {
         DIR* dir;
@@ -44,7 +47,7 @@ int main()
         }
 
         closedir(dir);
-        value_dic = count_dic;
+        // value_dic = count_dic;
 
         int check_trim;
         check_trim = memory_trim(dir_name, &value_dic, count_dic);
@@ -56,25 +59,20 @@ int main()
         system("clear");
         theme_menu(dir_name, value_dic);
         printf("Please, choose theme for your game.\n");
+        int theme;
 
-        char choice[255];
-        int a = 0;
-
-        while (fgets(choice, 255, stdin)) { // можно проверять на правильность
-            if (check_digit(choice, strlen(choice)) == -1) {
+        while (1) {
+            theme = choice_theme(value_dic);
+            if (theme < 1) {
                 printf("It isn't correct punct of menu. Try again.\n");
                 continue;
-            }
-            a = atoi(choice);
-            if (a > value_dic) {
-                printf("It isn't correct punct of menu. Try again.\n");
             } else {
                 break;
             }
         }
 
         char part_of_path[] = "dictionary//";
-        char* file_name = strcat(dir_name[a - 1], ".txt");
+        char* file_name = strcat(dir_name[theme - 1], ".txt");
         char* path_name = strcat(part_of_path, file_name);
 
         FILE* fp = fopen(path_name, "r");
@@ -110,7 +108,18 @@ int main()
         }
         fclose(fp);
 
-        printf("\n%s\n", words[0]);
+        int word_number = get_rand(0, value_words - 1);
+        size_t length = strlen(words[word_number]);
+
+        char guessed_word[length];
+        char hidden_word[length];
+        char underline[] = "_";
+
+        fill_arr(guessed_word, length, words[word_number]);
+        fill_arr(hidden_word, length - 1, underline);
+
+        printf("\n%s\n", guessed_word);
+        printf("%s\n", hidden_word);
         exit_condition = 0;
         free_mem(dir_name, value_dic, words, value_words);
     }
