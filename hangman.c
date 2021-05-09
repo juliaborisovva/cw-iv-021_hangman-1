@@ -1,6 +1,7 @@
 #include "hangman.h"
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void cut_ext(char* fname)
@@ -34,4 +35,28 @@ int check_digit(char* arr, int max)
         }
     }
     return 0;
+}
+
+int memory_trim(char** array, int* value, int count)
+{
+    *value = count;
+    char** h = realloc(array, *value * sizeof(char*));
+    if (h != NULL) {
+        array = h;
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
+void free_mem(char** dir_name, int value_dic, char** words, int value_words)
+{
+    for (int r = value_dic - 1; r >= 0; r--) {
+        free(dir_name[r]); // очищаем память выделенную под массив слов
+    }
+    free(dir_name);
+    for (int r = value_words - 1; r >= 0; r--) {
+        free(words[r]); // очищаем память выделенную под массив слов
+    }
+    free(words);
 }
