@@ -1,8 +1,13 @@
 #include "hangman.h"
 #include <ctype.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define CANTREALLOCMEMORY NULL
+
+enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 void cut_ext(char* fname)
 {
@@ -37,16 +42,15 @@ int check_digit(char* arr, int max)
     return 0;
 }
 
-int memory_trim(char** array, int* value, int count)
+int trim_memory(char** array, int* value, int count)
 {
     *value = count;
     char** h = realloc(array, *value * sizeof(char*));
     if (h != NULL) {
         array = h;
-        return 0;
-    } else {
-        return -1;
+        return MEMTRUNCATED;
     }
+    return CANTTRUNCMEM;
 }
 
 void free_mem(char** dir_name, int value_dic, char** words, int value_words)
@@ -99,4 +103,69 @@ int fill_arr(char* empty, int length, char* symbols)
     empty[length] = '\0';
 
     return 0;
+}
+
+int mem_expansion(int* value, char** str)
+{
+    *value *= 2;
+    char** h = realloc(str, *value * sizeof(char*));
+    if (h == NULL) {
+        return CANTREALLOCMEM;
+    }
+    str = h;
+    return REALLOCEDMEM;
+}
+
+int skip_point(char name[])
+{
+    if (name[0] == '.') {
+        return WITHPOINT;
+    }
+    return WITHOUTPOINT;
+}
+
+void cut_name(char* name, char** dir_name, int count_dic)
+{
+    char temp[255];
+    strcpy(temp, name);
+    cut_ext(temp);
+    dir_name[count_dic] = (char*)malloc(strlen(temp) + 1);
+    strcpy(dir_name[count_dic], temp);
+}
+
+char** open_dir(int* value_dic)
+{
+    DIR* dir;
+    struct dirent* entry;
+
+    dir = opendir("dictionary");
+    if (!dir) {
+        return CANTOPENDIRECT;
+    }
+
+    *value_dic = 200;
+    char** dir_name = (char**)malloc((*value_dic) * sizeof(char*));
+    int check_mem;
+    int count_dic = 0;
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (count_dic == *value_dic) {
+            check_mem = mem_expansion(value_dic, dir_name);
+            if (check_mem == CANTREALLOCMEM) {
+                return CANTREALLOCMEMORY;
+            }
+        }
+        if (skip_point(entry->d_name) == WITHPOINT) {
+            continue;
+        }
+        cut_name(entry->d_name, dir_name, count_dic);
+        count_dic++;
+    }
+    closedir(dir);
+    int check_trim;
+    check_trim = trim_memory(dir_name, value_dic, count_dic);
+    if (check_trim == CANTTRUNCMEM) {
+        return CANTTRUNCMEMORY;
+    }
+    return dir_name;
 }

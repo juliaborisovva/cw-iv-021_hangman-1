@@ -1,4 +1,5 @@
 #include "hangman.h"
+#include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,48 +13,14 @@ int main()
     srand(time(NULL));
 
     while (exit_condition) {
-        DIR* dir;
-        struct dirent* entry;
-
-        dir = opendir("dictionary");
-        if (!dir) {
+        int value_dic;
+        char** dir_name = open_dir(&value_dic);
+        if (dir_name == CANTOPENDIRECT) {
+            return CANTOPENDIR;
             printf("Can not read directory.\n");
-            return -1;
-        }
-
-        int value_dic = 200;
-        char** dir_name = (char**)malloc(value_dic * sizeof(char*));
-
-        int count_dic = 0;
-        while ((entry = readdir(dir)) != NULL) {
-            if (count_dic == value_dic) {
-                value_dic *= 2;
-                char** h = realloc(dir_name, value_dic * sizeof(char*));
-                if (h == NULL) {
-                    return -1;
-                }
-                dir_name = h;
-            }
-            if (strcmp(entry->d_name, ".") == 0
-                || strcmp(entry->d_name, "..") == 0) {
-                continue;
-            }
-            char temp[255];
-            strcpy(temp, entry->d_name);
-            cut_ext(temp);
-            dir_name[count_dic] = (char*)malloc(strlen(temp) + 1);
-            strcpy(dir_name[count_dic], temp);
-            count_dic++;
-        }
-
-        closedir(dir);
-        // value_dic = count_dic;
-
-        int check_trim;
-        check_trim = memory_trim(dir_name, &value_dic, count_dic);
-        if (check_trim == -1) {
+        } else if (dir_name == CANTTRUNCMEMORY) {
             printf("Memory is not truncated\n");
-            return -1;
+            return CANTTRUNCMEM;
         }
 
         system("clear");
@@ -101,7 +68,7 @@ int main()
         }
         value_words = count_word;
 
-        check_trim = memory_trim(words, &value_words, count_dic);
+        int check_trim = trim_memory(words, &value_words, count_word);
         if (check_trim == -1) {
             printf("Memory is not truncated\n");
             return -1;
