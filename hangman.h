@@ -12,6 +12,8 @@ enum {
     REALLOCEDMEM = 0
 };
 
+void hangman(int n);
+
 void cut_ext(char* fname);
 
 void theme_menu(char** dir_name, int value_dic);
