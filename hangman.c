@@ -238,3 +238,27 @@ char** open_dir(int* value_dic)
     }
     return dir_name;
 }
+
+int play_game(char guessed_word[], char hidden_word[], int length)
+{
+    int num_error = 0;
+    int num_guess_ch = length - 1;
+
+    while (num_guess_ch >= 0 || num_error <= 9) {
+        system("clear");
+        hangman(num_error);
+
+        printf("\t%s\n", guessed_word);
+
+        num_guess_ch--;
+
+        printf("You have %d errors\n", num_error);
+        if (num_guess_ch == 0) {
+            return WIN;
+        }
+        if (num_error == 9) {
+            return LOSE;
+        }
+    }
+    return LOSE;
+}
