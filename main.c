@@ -85,8 +85,9 @@ int main()
         fill_arr(guessed_word, length, words[word_number]);
         fill_arr(hidden_word, length - 1, underline);
 
+        hangman(9);
         printf("\n%s\n", guessed_word);
-        printf("%s\n", hidden_word);
+
         exit_condition = 0;
         free_mem(dir_name, value_dic, words, value_words);
     }
