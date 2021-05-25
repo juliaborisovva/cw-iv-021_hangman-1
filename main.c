@@ -85,10 +85,15 @@ int main()
         fill_arr(guessed_word, length, words[word_number]);
         fill_arr(hidden_word, length - 1, underline);
 
-        hangman(9);
-        printf("\n%s\n", guessed_word);
+        int result = play_game(guessed_word, hidden_word, length);
+        if (result == WIN) {
+            printf("\nYou win!\n");
+        } else {
+            printf("\nYou lose!\n");
+        }
 
         exit_condition = 0;
+
         free_mem(dir_name, value_dic, words, value_words);
     }
     return 0;

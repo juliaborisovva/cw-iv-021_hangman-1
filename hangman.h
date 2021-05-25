@@ -12,6 +12,8 @@ enum {
     REALLOCEDMEM = 0
 };
 
+enum { WIN = 1, LOSE = 2 };
+
 void hangman(int n);
 
 void cut_ext(char* fname);
@@ -37,3 +39,5 @@ int skip_point(char* name);
 void cut_name(char* name, char** dir_name, int count_dic);
 
 char** open_dir(int* value_dic);
+
+int play_game(char guessed_word[], char hidden_word[], int length);
