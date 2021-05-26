@@ -65,7 +65,6 @@ int main()
             strcpy(words[count_word], tmp);
             count_word++;
         }
-        value_words = count_word;
 
         int check_trim = trim_memory(words, &value_words, count_word);
         if (check_trim == CANTTRUNCMEM) {
@@ -91,9 +90,9 @@ int main()
             printf("\nYou lose!\n");
         }
 
-        exit_condition = 0;
-
         free_mem(dir_name, value_dic, words, value_words);
+
+        exit_condition = play_again_main();
     }
     return 0;
 }

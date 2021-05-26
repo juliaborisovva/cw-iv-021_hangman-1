@@ -7,6 +7,8 @@
 
 #define CANTREALLOCMEMORY NULL
 
+enum { INCORRECT = -2, PLAYAGAIN = 1, GAMEEXIT = 0 };
+
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
@@ -328,4 +330,42 @@ int play_game(char guessed_word[], char hidden_word[], int length)
         used_ch_end++;
     }
     return LOSE;
+}
+
+int play_again()
+{
+    char exit_status[255]; //какое ограничение по колву символов поставить
+
+    fgets(exit_status, 255, stdin);
+    // можно проверять на правильность
+    int yes = strncasecmp(exit_status, "Y", 1);
+    int no = strncasecmp(exit_status, "N", 1);
+    if ((yes != 0 && no != 0) || strlen(exit_status) > 2) {
+        return INCORRECT;
+    }
+    if (yes == 0) {
+        return PLAYAGAIN;
+    }
+    if (no == 0) {
+        return GAMEEXIT;
+    }
+    return GAMEEXIT;
+}
+
+int play_again_main()
+{
+    printf("\nDo you want to play again? Y/N\n");
+
+    while (1) {
+        int status = play_again();
+        if (status == INCORRECT) {
+            printf("\nIncorrect answer, please try again.\n");
+            continue;
+        }
+        if (status == GAMEEXIT) {
+            printf("\nThank you. Good bye!\n");
+            return GAMEEXIT;
+        }
+        return PLAYAGAIN;
+    }
 }
