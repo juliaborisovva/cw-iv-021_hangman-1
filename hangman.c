@@ -238,6 +238,50 @@ char** open_dir(int* value_dic)
     return dir_name;
 }
 
+char** get_words_array(int* value_words, char path[])
+{
+    FILE* fp = fopen(path, "r");
+    if (fp == NULL) {
+        return CANNOTOPENFILE;
+    }
+
+    *value_words = 200;
+    char** words = (char**)malloc((*value_words) * sizeof(char*));
+    if (words == NULL) {
+        return CANTMALLOCMEMORY;
+    }
+    char tmp[255];
+    int count_word = 0;
+
+    while (fgets(tmp, 255, fp)) {
+        if (count_word == *value_words) {
+            *value_words *= 2;
+            char** h = mem_resize(*value_words, words);
+            if (h == NULL) {
+                return CANTREALLOCMEMORY;
+            }
+            words = h;
+        }
+
+        words[count_word] = (char*)malloc(strlen(tmp) + 1);
+        if (words[count_word] == NULL) {
+            free(words);
+            return CANTMALLOCMEMORY;
+        }
+        strcpy(words[count_word], tmp);
+        count_word++;
+    }
+
+    *value_words = count_word;
+    char** h = mem_resize(*value_words, words);
+    if (h == CANTREALLOCMEMORY) {
+        return CANTREALLOCMEMORY;
+    }
+    words = h;
+    fclose(fp);
+    return words;
+}
+
 void concat_path_name(char path[], char* dir_name)
 {
     strcat(path, "dictionary//");

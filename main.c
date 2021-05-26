@@ -44,48 +44,24 @@ int main()
         }
 
         char path[MAX_PATH];
+        for (int i = 0; i < MAX_PATH; i++) {
+            path[i] = '\0';
+        }
+
         concat_path_name(path, dir_name[theme - 1]);
 
-        FILE* fp = fopen(path, "r");
-        if (fp == NULL) {
+        int value_words;
+        char** words = get_words_array(&value_words, path);
+        if (words == CANNOTOPENFILE) {
             printf("Cannot open file.\n");
             return CANTOPENFILE;
-        }
-
-        int value_words = 200;
-        char** words = (char**)malloc(value_words * sizeof(char*));
-        if (words == NULL) {
+        } else if (words == CANTMALLOCMEMORY) {
+            printf("Memory is not malloced\n");
             return CANTMALLOCMEM;
-        }
-        char tmp[255];
-        int count_word = 0;
-
-        while (fgets(tmp, 255, fp)) {
-            if (count_word == value_words) {
-                value_words *= 2;
-                char** h = mem_resize(value_words, words);
-                if (h == NULL) {
-                    return CANTREALLOCMEM;
-                }
-                words = h;
-            }
-
-            words[count_word] = (char*)malloc(strlen(tmp) + 1);
-            if (words[count_word] == NULL) {
-                free(words);
-                return CANTMALLOCMEM;
-            }
-            strcpy(words[count_word], tmp);
-            count_word++;
-        }
-
-        value_words = count_word;
-        char** h = mem_resize(value_words, words);
-        if (h == CANTREALLOCMEMORY) {
-            printf("Memory is not truncated\n");
+        } else if (words == CANTREALLOCMEMORY) {
+            printf("Memory is not reallocated\n");
             return CANTREALLOCMEM;
         }
-        fclose(fp);
 
         int word_number = get_rand(0, value_words - 1);
         size_t length = strlen(words[word_number]);
