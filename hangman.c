@@ -7,11 +7,15 @@
 
 #define CANTREALLOCMEMORY NULL
 
+enum { ISNOTDIGIT = -1, ALLDIGIT = 0 };
+
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
 enum { INCORLETTER = '0' };
+
+enum { INCORTHEME = -1 };
 
 void hangman(int n)
 {
@@ -138,21 +142,18 @@ void free_mem(char** dir_name, int value_dic, char** words, int value_words)
     free(words);
 }
 
-int choice_theme(int value_dic)
+int choose_theme(int value_dic)
 {
     char choice[255];
     int theme = 0;
 
-    while (fgets(choice, 255, stdin)) { // можно проверять на правильность
-        if (check_digit(choice, strlen(choice)) == -1) {
-            return -1;
-        }
-        theme = atoi(choice);
-        if (theme > value_dic) {
-            return -1;
-        } else {
-            break;
-        }
+    fgets(choice, 255, stdin); // можно проверять на правильность
+    if (check_digit(choice, strlen(choice)) == ISNOTDIGIT) {
+        return INCORTHEME;
+    }
+    theme = atoi(choice);
+    if (theme > value_dic) {
+        return INCORTHEME;
     }
     return theme;
 }
