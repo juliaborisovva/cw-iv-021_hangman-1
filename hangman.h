@@ -9,7 +9,6 @@ enum {
     CANTOPENDIR = -1,
     CANTOPENFILE = -1,
     CANTREALLOCMEM = -1,
-    MEMREALLOCED = 0,
     CANTMALLOCMEM = -1
 };
 
@@ -55,3 +54,5 @@ int play_again_main();
 void concat_path_name(char path[], char* dir_name);
 
 char** get_words_array(int* value_words, char path[]);
+
+int print_errors(char** n);
