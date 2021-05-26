@@ -45,7 +45,7 @@ int main()
         FILE* fp = fopen(path_name, "r");
         if (fp == NULL) {
             printf("Cannot open file.\n");
-            return -1;
+            return CANTOPENFILE;
         }
 
         int value_words = 200;
@@ -58,7 +58,7 @@ int main()
                 value_words *= 2;
                 char** h = realloc(words, value_words * sizeof(char*));
                 if (h == NULL) {
-                    return -1;
+                    return CANTREALLOCMEM;
                 }
                 words = h;
             }
@@ -69,9 +69,9 @@ int main()
         value_words = count_word;
 
         int check_trim = trim_memory(words, &value_words, count_word);
-        if (check_trim == -1) {
+        if (check_trim == CANTTRUNCMEM) {
             printf("Memory is not truncated\n");
-            return -1;
+            return CANTTRUNCMEM;
         }
         fclose(fp);
 
