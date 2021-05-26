@@ -40,4 +40,6 @@ void cut_name(char* name, char** dir_name, int count_dic);
 
 char** open_dir(int* value_dic);
 
+int check_usage(char* used_ch, int max, char letter);
+
 int play_game(char guessed_word[], char hidden_word[], int length);

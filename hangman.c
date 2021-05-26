@@ -9,6 +9,8 @@
 
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
+enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
+
 void hangman(int n)
 {
     switch (n) {
@@ -239,26 +241,55 @@ char** open_dir(int* value_dic)
     return dir_name;
 }
 
+int check_usage(char* used_ch, int max, char letter)
+{
+    for (int i = 0; i < max; i++) {
+        if (used_ch[i] == tolower(letter)) {
+            return USEDLETTER;
+        }
+    }
+    return UNUSEDLETTER;
+}
+
 int play_game(char guessed_word[], char hidden_word[], int length)
 {
     int num_error = 0;
     int num_guess_ch = length - 1;
+    char used_ch[26] = {'a', 'b', 'c'};
+    int used_ch_end = 3;
 
     while (num_guess_ch >= 0 || num_error <= 9) {
-        system("clear");
+        // system("clear");
         hangman(num_error);
 
-        printf("\t%s\n", guessed_word);
-
-        num_guess_ch--;
+        if (num_error == 9) {
+            printf("\t%s\n", guessed_word);
+        } else {
+            printf("\t%s\n", hidden_word);
+        }
 
         printf("You have %d errors\n", num_error);
+        printf("Used letters:\n");
+        for (int i = 0; i < used_ch_end; i++) {
+            printf("%c", used_ch[i]);
+        }
+        printf("\n");
         if (num_guess_ch == 0) {
             return WIN;
         }
         if (num_error == 9) {
             return LOSE;
         }
+
+        char letter = 'd';
+        if (check_usage(used_ch, used_ch_end, letter) != UNUSEDLETTER) {
+            printf("\nUSED\n");
+        }
+
+        num_guess_ch--;
+
+        used_ch[used_ch_end] = tolower(letter);
+        used_ch_end++;
     }
     return LOSE;
 }
