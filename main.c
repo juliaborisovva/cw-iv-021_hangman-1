@@ -7,6 +7,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#define MAX_PATH 268
+
 int main()
 {
     int exit_condition = 1;
@@ -16,11 +18,14 @@ int main()
         int value_dic;
         char** dir_name = open_dir(&value_dic);
         if (dir_name == CANTOPENDIRECT) {
-            return CANTOPENDIR;
             printf("Can not read directory.\n");
-        } else if (dir_name == CANTTRUNCMEMORY) {
-            printf("Memory is not truncated\n");
-            return CANTTRUNCMEM;
+            return CANTOPENDIR;
+        } else if (dir_name == CANTMALLOCMEMORY) {
+            printf("Memory is not malloced\n");
+            return CANTMALLOCMEM;
+        } else if (dir_name == CANTREALLOCMEMORY) {
+            printf("Memory is not reallocated\n");
+            return CANTREALLOCMEM;
         }
 
         system("clear");
@@ -38,40 +43,25 @@ int main()
             }
         }
 
-        char part_of_path[] = "dictionary//";
-        char* file_name = strcat(dir_name[theme - 1], ".txt");
-        char* path_name = strcat(part_of_path, file_name);
+        char path[MAX_PATH];
+        for (int i = 0; i < MAX_PATH; i++) {
+            path[i] = '\0';
+        }
 
-        FILE* fp = fopen(path_name, "r");
-        if (fp == NULL) {
+        concat_path_name(path, dir_name[theme - 1]);
+
+        int value_words;
+        char** words = get_words_array(&value_words, path);
+        if (words == CANNOTOPENFILE) {
             printf("Cannot open file.\n");
             return CANTOPENFILE;
+        } else if (words == CANTMALLOCMEMORY) {
+            printf("Memory is not malloced\n");
+            return CANTMALLOCMEM;
+        } else if (words == CANTREALLOCMEMORY) {
+            printf("Memory is not reallocated\n");
+            return CANTREALLOCMEM;
         }
-
-        int value_words = 200;
-        char** words = (char**)malloc(value_words * sizeof(char*));
-        char tmp[255];
-        int count_word = 0;
-
-        while (fgets(tmp, 255, fp)) {
-            if (count_word == value_words) {
-                int check_mem = mem_expansion(&value_words, words);
-                if (check_mem == -1) {
-                    return CANTREALLOCMEM;
-                }
-            }
-
-            words[count_word] = (char*)malloc(strlen(tmp) + 1);
-            strcpy(words[count_word], tmp);
-            count_word++;
-        }
-
-        int check_trim = trim_memory(words, &value_words, count_word);
-        if (check_trim == CANTTRUNCMEM) {
-            printf("Memory is not truncated\n");
-            return CANTTRUNCMEM;
-        }
-        fclose(fp);
 
         int word_number = get_rand(0, value_words - 1);
         size_t length = strlen(words[word_number]);

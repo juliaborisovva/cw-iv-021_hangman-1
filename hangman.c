@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CANTREALLOCMEMORY NULL
-
 enum { INCORRECT = -2, PLAYAGAIN = 1, GAMEEXIT = 0 };
 
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
@@ -121,17 +119,6 @@ int check_digit(char* arr, int max)
     return ALLDIGIT;
 }
 
-int trim_memory(char** array, int* value, int count)
-{
-    *value = count;
-    char** h = realloc(array, *value * sizeof(char*));
-    if (h != NULL) {
-        array = h;
-        return MEMTRUNCATED;
-    }
-    return CANTTRUNCMEM;
-}
-
 void free_mem(char** dir_name, int value_dic, char** words, int value_words)
 {
     for (int r = value_dic - 1; r >= 0; r--) {
@@ -179,15 +166,13 @@ void fill_arr(char* empty, int length, char* symbols)
     empty[length] = '\0';
 }
 
-int mem_expansion(int* value, char** str)
+char** mem_resize(int value, char** array)
 {
-    *value *= 2;
-    char** h = realloc(str, *value * sizeof(char*));
+    char** h = realloc(array, value * sizeof(char*));
     if (h == NULL) {
-        return CANTREALLOCMEM;
+        return CANTREALLOCMEMORY;
     }
-    str = h;
-    return REALLOCEDMEM;
+    return h;
 }
 
 int skip_point(char name[])
@@ -219,15 +204,21 @@ char** open_dir(int* value_dic)
 
     *value_dic = 200;
     char** dir_name = (char**)malloc((*value_dic) * sizeof(char*));
-    int check_mem;
+    if (dir_name == NULL) {
+        return CANTMALLOCMEMORY;
+    }
+
     int count_dic = 0;
 
     while ((entry = readdir(dir)) != NULL) {
         if (count_dic == *value_dic) {
-            check_mem = mem_expansion(value_dic, dir_name);
-            if (check_mem == CANTREALLOCMEM) {
+            *value_dic *= 2;
+            char** h = mem_resize(*value_dic, dir_name);
+            if (h == NULL) {
+                free(dir_name);
                 return CANTREALLOCMEMORY;
             }
+            dir_name = h;
         }
         if (skip_point(entry->d_name) == WITHPOINT) {
             continue;
@@ -236,12 +227,66 @@ char** open_dir(int* value_dic)
         count_dic++;
     }
     closedir(dir);
-    int check_trim;
-    check_trim = trim_memory(dir_name, value_dic, count_dic);
-    if (check_trim == CANTTRUNCMEM) {
-        return CANTTRUNCMEMORY;
+
+    *value_dic = count_dic;
+    char** h = mem_resize(*value_dic, dir_name);
+    if (h == CANTREALLOCMEMORY) {
+        free(dir_name);
+        return CANTREALLOCMEMORY;
     }
+    dir_name = h;
     return dir_name;
+}
+
+char** get_words_array(int* value_words, char path[])
+{
+    FILE* fp = fopen(path, "r");
+    if (fp == NULL) {
+        return CANNOTOPENFILE;
+    }
+
+    *value_words = 200;
+    char** words = (char**)malloc((*value_words) * sizeof(char*));
+    if (words == NULL) {
+        return CANTMALLOCMEMORY;
+    }
+    char tmp[255];
+    int count_word = 0;
+
+    while (fgets(tmp, 255, fp)) {
+        if (count_word == *value_words) {
+            *value_words *= 2;
+            char** h = mem_resize(*value_words, words);
+            if (h == NULL) {
+                return CANTREALLOCMEMORY;
+            }
+            words = h;
+        }
+
+        words[count_word] = (char*)malloc(strlen(tmp) + 1);
+        if (words[count_word] == NULL) {
+            free(words);
+            return CANTMALLOCMEMORY;
+        }
+        strcpy(words[count_word], tmp);
+        count_word++;
+    }
+
+    *value_words = count_word;
+    char** h = mem_resize(*value_words, words);
+    if (h == CANTREALLOCMEMORY) {
+        return CANTREALLOCMEMORY;
+    }
+    words = h;
+    fclose(fp);
+    return words;
+}
+
+void concat_path_name(char path[], char* dir_name)
+{
+    strcat(path, "dictionary//");
+    strcat(path, dir_name);
+    strcat(path, ".txt");
 }
 
 int check_usage(char* used_ch, int max, char letter)
@@ -257,12 +302,14 @@ int check_usage(char* used_ch, int max, char letter)
 char enter_letter(char* used_ch, int max)
 {
     char choice[255];
-
     fgets(choice, 255, stdin); // можно проверять на правильность
     if (strlen(choice) - 1 > 1) {
         return INCORLETTER;
     }
     if (isdigit(choice[0]) != 0 || ispunct(choice[0]) != 0) {
+        return INCORLETTER;
+    }
+    if (choice[0] == '\n' || choice[0] == ' ' || choice[0] == '\t') {
         return INCORLETTER;
     }
     if (check_usage(used_ch, max, choice[0]) != UNUSEDLETTER) {
