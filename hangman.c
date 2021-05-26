@@ -163,7 +163,7 @@ int get_rand(int min, int max)
     return (int)rand() / (RAND_MAX + 1.0) * (max - min) + min;
 }
 
-int fill_arr(char* empty, int length, char* symbols)
+void fill_arr(char* empty, int length, char* symbols)
 {
     if (strlen(symbols) == 1) {
         for (int i = 0; i < length; i++) {
@@ -175,8 +175,6 @@ int fill_arr(char* empty, int length, char* symbols)
         }
     }
     empty[length] = '\0';
-
-    return 0;
 }
 
 int mem_expansion(int* value, char** str)

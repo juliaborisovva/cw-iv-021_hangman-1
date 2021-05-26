@@ -30,7 +30,7 @@ int choose_theme(int value_dic);
 
 int get_rand(int min, int max);
 
-int fill_arr(char* empty, int length, char* symbols);
+void fill_arr(char* empty, int length, char* symbols);
 
 int mem_expansion(int* value_dic, char** dir_name);
 
