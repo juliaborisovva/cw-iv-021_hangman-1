@@ -258,6 +258,9 @@ char enter_letter(char* used_ch, int max)
     if (isdigit(choice[0]) != 0 || ispunct(choice[0]) != 0) {
         return INCORLETTER;
     }
+    if (choice[0] == '\n' || choice[0] == ' ' || choice[0] == '\t') {
+        return INCORLETTER;
+    }
     if (check_usage(used_ch, max, choice[0]) != UNUSEDLETTER) {
         return INCORLETTER;
     }
