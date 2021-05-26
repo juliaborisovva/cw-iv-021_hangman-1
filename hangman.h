@@ -50,3 +50,5 @@ int play_game(char guessed_word[], char hidden_word[], int length);
 int play_again();
 
 int play_again_main();
+
+void concat_path_name(char path[], char* dir_name);

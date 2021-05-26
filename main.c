@@ -44,9 +44,7 @@ int main()
         }
 
         char path[MAX_PATH];
-        strcat(path, "dictionary//");
-        strcat(path, dir_name[theme - 1]);
-        strcat(path, ".txt");
+        concat_path_name(path, dir_name[theme - 1]);
 
         FILE* fp = fopen(path, "r");
         if (fp == NULL) {
@@ -54,7 +52,7 @@ int main()
             return CANTOPENFILE;
         }
 
-        int value_words = 3;
+        int value_words = 200;
         char** words = (char**)malloc(value_words * sizeof(char*));
         if (words == NULL) {
             return CANTMALLOCMEM;

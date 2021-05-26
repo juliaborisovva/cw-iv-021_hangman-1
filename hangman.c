@@ -238,6 +238,13 @@ char** open_dir(int* value_dic)
     return dir_name;
 }
 
+void concat_path_name(char path[], char* dir_name)
+{
+    strcat(path, "dictionary//");
+    strcat(path, dir_name);
+    strcat(path, ".txt");
+}
+
 int check_usage(char* used_ch, int max, char letter)
 {
     for (int i = 0; i < max; i++) {
