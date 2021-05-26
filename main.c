@@ -29,7 +29,7 @@ int main()
         int theme;
 
         while (1) {
-            theme = choice_theme(value_dic);
+            theme = choose_theme(value_dic);
             if (theme < 1) {
                 printf("It isn't correct punct of menu. Try again.\n");
                 continue;
