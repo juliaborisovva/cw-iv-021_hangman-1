@@ -11,6 +11,8 @@ enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
+enum { INCORLETTER = '0' };
+
 void hangman(int n)
 {
     switch (n) {
@@ -251,12 +253,29 @@ int check_usage(char* used_ch, int max, char letter)
     return UNUSEDLETTER;
 }
 
+char enter_letter(char* used_ch, int max)
+{
+    char choice[255];
+
+    fgets(choice, 255, stdin); // можно проверять на правильность
+    if (strlen(choice) - 1 > 1) {
+        return INCORLETTER;
+    }
+    if (isdigit(choice[0]) != 0 || ispunct(choice[0]) != 0) {
+        return INCORLETTER;
+    }
+    if (check_usage(used_ch, max, choice[0]) != UNUSEDLETTER) {
+        return INCORLETTER;
+    }
+    return choice[0];
+}
+
 int play_game(char guessed_word[], char hidden_word[], int length)
 {
     int num_error = 0;
     int num_guess_ch = length - 1;
-    char used_ch[26] = {'a', 'b', 'c'};
-    int used_ch_end = 3;
+    char used_ch[26];
+    int used_ch_end = 0;
 
     while (num_guess_ch >= 0 || num_error <= 9) {
         // system("clear");
@@ -281,9 +300,10 @@ int play_game(char guessed_word[], char hidden_word[], int length)
             return LOSE;
         }
 
-        char letter = 'd';
-        if (check_usage(used_ch, used_ch_end, letter) != UNUSEDLETTER) {
-            printf("\nUSED\n");
+        printf("\nEnter letter:\n");
+        char letter = enter_letter(used_ch, used_ch_end);
+        if (letter == INCORLETTER) {
+            continue;
         }
 
         num_guess_ch--;

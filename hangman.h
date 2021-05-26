@@ -42,4 +42,6 @@ char** open_dir(int* value_dic);
 
 int check_usage(char* used_ch, int max, char letter);
 
+char enter_letter(char* used_ch, int max);
+
 int play_game(char guessed_word[], char hidden_word[], int length);
