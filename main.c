@@ -55,13 +55,12 @@ int main()
 
         while (fgets(tmp, 255, fp)) {
             if (count_word == value_words) {
-                value_words *= 2;
-                char** h = realloc(words, value_words * sizeof(char*));
-                if (h == NULL) {
+                int check_mem = mem_expansion(&value_words, words);
+                if (check_mem == -1) {
                     return CANTREALLOCMEM;
                 }
-                words = h;
             }
+
             words[count_word] = (char*)malloc(strlen(tmp) + 1);
             strcpy(words[count_word], tmp);
             count_word++;
