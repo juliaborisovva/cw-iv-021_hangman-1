@@ -7,11 +7,11 @@
 
 #define CANTREALLOCMEMORY NULL
 
-enum { ISNOTDIGIT = -1, ALLDIGIT = 0 };
-
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
+
+enum { ISNOTDIGIT = -1, ALLDIGIT = 0 };
 
 enum { INCORLETTER = '0' };
 
@@ -113,10 +113,10 @@ int check_digit(char* arr, int max)
         if (isdigit(arr[i]) || arr[i] == '\n') {
             continue;
         } else {
-            return -1;
+            return ISNOTDIGIT;
         }
     }
-    return 0;
+    return ALLDIGIT;
 }
 
 int trim_memory(char** array, int* value, int count)

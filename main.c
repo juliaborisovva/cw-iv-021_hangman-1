@@ -45,7 +45,7 @@ int main()
         FILE* fp = fopen(path_name, "r");
         if (fp == NULL) {
             printf("Cannot open file.\n");
-            return -1;
+            return CANTOPENFILE;
         }
 
         int value_words = 200;
@@ -55,13 +55,12 @@ int main()
 
         while (fgets(tmp, 255, fp)) {
             if (count_word == value_words) {
-                value_words *= 2;
-                char** h = realloc(words, value_words * sizeof(char*));
-                if (h == NULL) {
-                    return -1;
+                int check_mem = mem_expansion(&value_words, words);
+                if (check_mem == -1) {
+                    return CANTREALLOCMEM;
                 }
-                words = h;
             }
+
             words[count_word] = (char*)malloc(strlen(tmp) + 1);
             strcpy(words[count_word], tmp);
             count_word++;
@@ -69,9 +68,9 @@ int main()
         value_words = count_word;
 
         int check_trim = trim_memory(words, &value_words, count_word);
-        if (check_trim == -1) {
+        if (check_trim == CANTTRUNCMEM) {
             printf("Memory is not truncated\n");
-            return -1;
+            return CANTTRUNCMEM;
         }
         fclose(fp);
 
