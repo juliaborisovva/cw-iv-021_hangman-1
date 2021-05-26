@@ -7,6 +7,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#define MAX_PATH 268
+
 int main()
 {
     int exit_condition = 1;
@@ -41,11 +43,12 @@ int main()
             }
         }
 
-        char part_of_path[] = "dictionary//";
-        char* file_name = strcat(dir_name[theme - 1], ".txt");
-        char* path_name = strcat(part_of_path, file_name);
+        char path[MAX_PATH];
+        strcat(path, "dictionary//");
+        strcat(path, dir_name[theme - 1]);
+        strcat(path, ".txt");
 
-        FILE* fp = fopen(path_name, "r");
+        FILE* fp = fopen(path, "r");
         if (fp == NULL) {
             printf("Cannot open file.\n");
             return CANTOPENFILE;
