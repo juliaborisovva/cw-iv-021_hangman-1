@@ -44,4 +44,7 @@ int check_usage(char* used_ch, int max, char letter);
 
 char enter_letter(char* used_ch, int max);
 
+int check_match(
+        char* guessed, char* hidden, int len, char letter, int* num_guess_ch);
+
 int play_game(char guessed_word[], char hidden_word[], int length);
