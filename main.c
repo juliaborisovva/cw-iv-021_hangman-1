@@ -33,14 +33,9 @@ int main()
         printf("Please, choose theme for your game.\n");
         int theme;
 
-        while (1) {
-            theme = choose_theme(value_dic);
-            if (theme < 1) {
-                printf("It isn't correct punct of menu. Try again.\n");
-                continue;
-            } else {
-                break;
-            }
+        while ((theme = choose_theme(value_dic)) == INCORTHEME) {
+            printf("It isn't correct punct of menu. Try again.\n");
+            continue;
         }
 
         char path[MAX_PATH];

@@ -11,11 +11,9 @@ enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
-enum { ISNOTDIGIT = -1, ALLDIGIT = 0 };
+enum { ISNOTDIGIT = -1, ALLDIGIT = 0 }; // убрать переменную
 
 enum { INCORLETTER = '0' };
-
-enum { INCORTHEME = -1 };
 
 void hangman(int n)
 {
@@ -107,16 +105,18 @@ void theme_menu(char** dir_name, int value_dic)
     }
 }
 
-int check_digit(char* arr, int max)
+int check_theme(char* arr, int value_dic)
 {
-    for (int i = 0; i < max; i++) {
-        if (isdigit(arr[i]) || arr[i] == '\n') {
+    int theme = atoi(arr);
+    for (int i = 0; i < strlen(arr); i++) {
+        if ((isdigit(arr[i]) || arr[i] == '\n') && theme <= value_dic
+            && theme > 0) {
             continue;
         } else {
-            return ISNOTDIGIT;
+            return INCORTHEME;
         }
     }
-    return ALLDIGIT;
+    return theme;
 }
 
 void free_mem(char** dir_name, int value_dic, char** words, int value_words)
@@ -134,14 +134,9 @@ void free_mem(char** dir_name, int value_dic, char** words, int value_words)
 int choose_theme(int value_dic)
 {
     char choice[255];
-    int theme = 0;
-
+    int theme;
     fgets(choice, 255, stdin); // можно проверять на правильность
-    if (check_digit(choice, strlen(choice)) == ISNOTDIGIT) {
-        return INCORTHEME;
-    }
-    theme = atoi(choice);
-    if (theme > value_dic) {
+    if ((theme = check_theme(choice, value_dic)) == INCORTHEME) {
         return INCORTHEME;
     }
     return theme;
