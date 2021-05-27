@@ -11,8 +11,6 @@ enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
-enum { ISNOTDIGIT = -1, ALLDIGIT = 0 }; // убрать переменную
-
 enum { INCORLETTER = '0' };
 
 void hangman(int n)
