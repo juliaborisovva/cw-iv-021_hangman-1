@@ -14,13 +14,15 @@ enum {
 
 enum { WIN = 1, LOSE = 2 };
 
+enum { INCORTHEME = -1 };
+
 void hangman(int n);
 
 void cut_ext(char* fname);
 
 void theme_menu(char** dir_name, int value_dic);
 
-int check_digit(char* arr, int max);
+int check_theme(char* arr, int value_dic);
 
 void free_mem(char** dir_name, int value_dic, char** words, int value_words);
 
