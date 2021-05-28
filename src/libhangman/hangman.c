@@ -1,11 +1,9 @@
-#include "libhangman/hangman.h"
+#include "hangman.h"
 #include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-enum { INCORRECT = -2, PLAYAGAIN = 1, GAMEEXIT = 0 };
 
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
@@ -13,7 +11,7 @@ enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
 enum { INCORLETTER = '0' };
 
-void hangman(int n)
+void print_hangman(int n)
 {
     switch (n) {
     case 9:
@@ -95,12 +93,13 @@ void cut_ext(char* fname)
     }
 }
 
-void theme_menu(char** dir_name, int value_dic)
+void print_theme_menu(char** dir_name, int value_dic)
 {
     printf("Theme menu:\n\n");
     for (int i = 0; i < value_dic; i++) {
         printf("%d - theme \"%s\"\n", i + 1, dir_name[i]);
     }
+    printf("\n");
 }
 
 int check_theme(char* arr, int value_dic)
@@ -343,7 +342,7 @@ int play_game(char guessed_word[], char hidden_word[], int length)
 
     while (num_guess_ch >= 0 || num_error <= 9) {
         system("clear");
-        hangman(num_error);
+        print_hangman(num_error);
 
         if (num_error == 9) {
             printf("\t%s\n", guessed_word);
@@ -392,28 +391,10 @@ int play_again()
         return INCORRECT;
     }
     if (yes == 0) {
-        return PLAYAGAIN;
+        return PLAY;
     }
     if (no == 0) {
-        return GAMEEXIT;
+        return EXIT;
     }
-    return GAMEEXIT;
-}
-
-int play_again_main()
-{
-    printf("\nDo you want to play again? Y/N\n");
-
-    while (1) {
-        int status = play_again();
-        if (status == INCORRECT) {
-            printf("\nIncorrect answer, please try again.\n");
-            continue;
-        }
-        if (status == GAMEEXIT) {
-            printf("\nThank you. Good bye!\n");
-            return GAMEEXIT;
-        }
-        return PLAYAGAIN;
-    }
+    return EXIT;
 }
