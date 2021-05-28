@@ -38,12 +38,12 @@ int main()
             continue;
         }
 
-        char path[MAX_PATH];
-        for (int i = 0; i < MAX_PATH; i++) {
-            path[i] = '\0';
+        char* path;
+        path = concat_path_name(dir_name[theme - 1]);
+        if (path == CANTCALLOCMEMORY) {
+            printf("The paths did not merge.\n");
+            return CANTCALLOCMEM;
         }
-
-        concat_path_name(path, dir_name[theme - 1]);
 
         int value_words;
         char** words = get_words_array(&value_words, path);

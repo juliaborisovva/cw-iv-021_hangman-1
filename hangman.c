@@ -275,11 +275,19 @@ char** get_words_array(int* value_words, char path[])
     return words;
 }
 
-void concat_path_name(char path[], char* dir_name)
+char* concat_path_name(char* dir_name)
 {
-    strcat(path, "dictionary//");
+    char* path_dir = "dictionary/";
+    char* expansion = ".txt";
+    int length = strlen(path_dir) + strlen(expansion) + strlen(dir_name);
+    char* path = (char*)calloc(length, sizeof(char));
+    if (path == NULL) {
+        return CANTCALLOCMEMORY;
+    }
+    strcat(path, path_dir);
     strcat(path, dir_name);
-    strcat(path, ".txt");
+    strcat(path, expansion);
+    return path;
 }
 
 int check_usage(char* used_ch, int max, char letter)
