@@ -1,4 +1,4 @@
-#include "hangman.h"
+#include "libhangman/hangman.h"
 #include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
