@@ -1,4 +1,4 @@
-#include "hangman.h"
+#include "libhangman/hangman.h"
 #include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -106,7 +106,7 @@ void theme_menu(char** dir_name, int value_dic)
 int check_theme(char* arr, int value_dic)
 {
     int theme = atoi(arr);
-    for (int i = 0; i < strlen(arr); i++) {
+    for (size_t i = 0; i < strlen(arr); i++) {
         if ((isdigit(arr[i]) || arr[i] == '\n') && theme <= value_dic
             && theme > 0) {
             continue;
@@ -190,7 +190,7 @@ char** open_dir(int* value_dic)
     DIR* dir;
     struct dirent* entry;
 
-    dir = opendir("dictionary");
+    dir = opendir("../dictionary");
     if (!dir) {
         return CANTOPENDIRECT;
     }
@@ -277,7 +277,7 @@ char** get_words_array(int* value_words, char path[])
 
 char* concat_path_name(char* dir_name)
 {
-    char* path_dir = "dictionary/";
+    char* path_dir = "../dictionary/";
     char* expansion = ".txt";
     int length = strlen(path_dir) + strlen(expansion) + strlen(dir_name);
     char* path = (char*)calloc(length, sizeof(char));
