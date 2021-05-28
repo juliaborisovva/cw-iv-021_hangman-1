@@ -9,7 +9,7 @@ enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
-enum { INCORLETTER = '0' };
+enum { INCORLETTER = '0', INCORRECTLETTER = -1, CORRECTLETTER = 0 };
 
 void print_hangman(int n)
 {
@@ -132,7 +132,7 @@ int choose_theme(int value_dic)
 {
     char choice[255];
     int theme;
-    fgets(choice, 255, stdin); // можно проверять на правильность
+    fgets(choice, 255, stdin);
     if ((theme = check_theme(choice, value_dic)) == INCORTHEME) {
         return INCORTHEME;
     }
@@ -299,17 +299,25 @@ int check_usage(char* used_ch, int max, char letter)
     return UNUSEDLETTER;
 }
 
+int check_letter(char choice[])
+{
+    if (strlen(choice) - 1 > 1) {
+        return INCORRECTLETTER;
+    }
+    if (isdigit(choice[0]) != 0 || ispunct(choice[0]) != 0) {
+        return INCORRECTLETTER;
+    }
+    if (choice[0] == '\n' || choice[0] == ' ' || choice[0] == '\t') {
+        return INCORRECTLETTER;
+    }
+    return CORRECTLETTER;
+}
+
 char enter_letter(char* used_ch, int max)
 {
     char choice[255];
-    fgets(choice, 255, stdin); // можно проверять на правильность
-    if (strlen(choice) - 1 > 1) {
-        return INCORLETTER;
-    }
-    if (isdigit(choice[0]) != 0 || ispunct(choice[0]) != 0) {
-        return INCORLETTER;
-    }
-    if (choice[0] == '\n' || choice[0] == ' ' || choice[0] == '\t') {
+    fgets(choice, 255, stdin);
+    if (check_letter(choice[]) == INCORRECTLETTER) {
         return INCORLETTER;
     }
     if (check_usage(used_ch, max, choice[0]) != UNUSEDLETTER) {
@@ -381,7 +389,7 @@ int play_game(char guessed_word[], char hidden_word[], int length)
 
 int play_again()
 {
-    char exit_status[255]; //какое ограничение по колву символов поставить
+    char exit_status[255];
 
     fgets(exit_status, 255, stdin);
     // можно проверять на правильность
