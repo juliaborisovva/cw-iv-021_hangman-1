@@ -16,13 +16,15 @@ enum {
 
 enum { WIN = 1, LOSE = 2 };
 
+enum { INCORRECT = -2, PLAY = 1, EXIT = 0 };
+
 enum { INCORTHEME = -1 };
 
-void hangman(int n);
+void print_hangman(int n);
 
 void cut_ext(char* fname);
 
-void theme_menu(char** dir_name, int value_dic);
+void print_theme_menu(char** dir_name, int value_dic);
 
 int check_theme(char* arr, int value_dic);
 

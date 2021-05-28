@@ -7,11 +7,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAX_PATH 268
-
 int main()
 {
-    int exit_condition = 1;
+    int exit_condition = PLAY;
     srand(time(NULL));
 
     while (exit_condition) {
@@ -29,11 +27,12 @@ int main()
         }
 
         system("clear");
-        theme_menu(dir_name, value_dic);
-        printf("Please, choose theme for your game.\n");
+        print_theme_menu(dir_name, value_dic);
+        printf("Please, choose theme for your game:\n");
         int theme;
-
         while ((theme = choose_theme(value_dic)) == INCORTHEME) {
+            system("clear");
+            print_theme_menu(dir_name, value_dic);
             printf("It isn't correct punct of menu. Try again.\n");
             continue;
         }
@@ -77,7 +76,23 @@ int main()
 
         free_mem(dir_name, value_dic, words, value_words);
 
-        exit_condition = play_again_main();
+        printf("\nDo you want to play again? Y/N\n");
+        while (1) {
+            exit_condition = play_again();
+            if (exit_condition == INCORRECT) {
+                system("clear");
+                printf("\nDo you want to play again? Y/N\n");
+                printf("\nIncorrect answer, please try again.\n");
+                continue;
+            }
+            if (exit_condition == EXIT) {
+                printf("\nThank you. Good bye!\n");
+                return EXIT;
+            }
+            if (exit_condition == PLAY) {
+                break;
+            }
+        }
     }
     return 0;
 }
