@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum { MAX_LENGTH = 255 };
+
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
-enum { INCORLETTER = '0' };
+enum { INCORLETTER = '0', INCORRECTLETTER = -1, CORRECTLETTER = 0 };
 
 void print_hangman(int n)
 {
@@ -130,9 +132,9 @@ void free_mem(char** dir_name, int value_dic, char** words, int value_words)
 
 int choose_theme(int value_dic)
 {
-    char choice[255];
+    char choice[MAX_LENGTH];
     int theme;
-    fgets(choice, 255, stdin); // можно проверять на правильность
+    fgets(choice, MAX_LENGTH, stdin);
     if ((theme = check_theme(choice, value_dic)) == INCORTHEME) {
         return INCORTHEME;
     }
@@ -177,7 +179,7 @@ int skip_point(char name[])
 
 void cut_name(char* name, char** dir_name, int count_dic)
 {
-    char temp[255];
+    char temp[MAX_LENGTH];
     strcpy(temp, name);
     cut_ext(temp);
     dir_name[count_dic] = (char*)malloc(strlen(temp) + 1);
@@ -242,10 +244,10 @@ char** get_words_array(int* value_words, char path[])
     if (words == NULL) {
         return CANTMALLOCMEMORY;
     }
-    char tmp[255];
+    char tmp[MAX_LENGTH];
     int count_word = 0;
 
-    while (fgets(tmp, 255, fp)) {
+    while (fgets(tmp, MAX_LENGTH, fp)) {
         if (count_word == *value_words) {
             *value_words *= 2;
             char** h = mem_resize(*value_words, words);
@@ -299,17 +301,25 @@ int check_usage(char* used_ch, int max, char letter)
     return UNUSEDLETTER;
 }
 
-char enter_letter(char* used_ch, int max)
+int check_letter(char choice[])
 {
-    char choice[255];
-    fgets(choice, 255, stdin); // можно проверять на правильность
     if (strlen(choice) - 1 > 1) {
-        return INCORLETTER;
+        return INCORRECTLETTER;
     }
     if (isdigit(choice[0]) != 0 || ispunct(choice[0]) != 0) {
-        return INCORLETTER;
+        return INCORRECTLETTER;
     }
     if (choice[0] == '\n' || choice[0] == ' ' || choice[0] == '\t') {
+        return INCORRECTLETTER;
+    }
+    return CORRECTLETTER;
+}
+
+char enter_letter(char* used_ch, int max)
+{
+    char choice[MAX_LENGTH];
+    fgets(choice, MAX_LENGTH, stdin);
+    if (check_letter(choice[]) == INCORRECTLETTER) {
         return INCORLETTER;
     }
     if (check_usage(used_ch, max, choice[0]) != UNUSEDLETTER) {
@@ -381,9 +391,9 @@ int play_game(char guessed_word[], char hidden_word[], int length)
 
 int play_again()
 {
-    char exit_status[255]; //какое ограничение по колву символов поставить
+    char exit_status[MAX_LENGTH];
 
-    fgets(exit_status, 255, stdin);
+    fgets(exit_status, MAX_LENGTH, stdin);
     // можно проверять на правильность
     int yes = strncasecmp(exit_status, "Y", 1);
     int no = strncasecmp(exit_status, "N", 1);
