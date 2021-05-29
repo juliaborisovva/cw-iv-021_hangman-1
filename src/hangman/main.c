@@ -32,8 +32,7 @@ int main()
             continue;
         }
 
-        char* path;
-        path = concat_path_name(dir_name[theme - 1], &num_error);
+        char* path = concat_path_name(dir_name[theme - 1], &num_error);
         if ((error = check_error(num_error)) != WITHOUTERROR) {
             return error;
         }
@@ -64,21 +63,14 @@ int main()
         free_mem(dir_name, value_dic, words, value_words);
 
         printf("\nDo you want to play again? Y/N\n");
-        while (1) {
-            exit_condition = play_again();
-            if (exit_condition == INCORRECT) {
-                system("clear");
-                printf("\nDo you want to play again? Y/N\n");
-                printf("\nIncorrect answer, please try again.\n");
-                continue;
-            }
-            if (exit_condition == EXIT) {
-                printf("\nThank you. Good bye!\n");
-                return EXIT;
-            }
-            if (exit_condition == PLAY) {
-                break;
-            }
+        while ((exit_condition = play_again()) == INCORRECT) {
+            system("clear");
+            printf("\nDo you want to play again? Y/N\n");
+            printf("\nIncorrect answer, please try again.\n");
+            continue;
+        }
+        if (exit_condition == EXIT) {
+            printf("\nThank you. Good bye!\n");
         }
     }
     return 0;

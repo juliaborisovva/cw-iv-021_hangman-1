@@ -192,7 +192,7 @@ char** open_dir(int* value_dic, int* num_error)
     struct dirent* entry;
 
     dir = opendir("../dictionary");
-    if (!dir) {
+    if (dir == NULL) {
         *num_error = CANTOPENDIR;
         return CANTOPENDIRECT;
     }
@@ -227,7 +227,7 @@ char** open_dir(int* value_dic, int* num_error)
 
     *value_dic = count_dic;
     char** h = mem_resize(*value_dic, dir_name);
-    if (h == CANTREALLOCMEMORY) {
+    if (h == NULL) {
         free(dir_name);
         *num_error = CANTREALLOCMEM;
         return CANTREALLOCMEMORY;
@@ -277,7 +277,7 @@ char** get_words_array(int* value_words, char path[], int* num_error)
 
     *value_words = count_word;
     char** h = mem_resize(*value_words, words);
-    if (h == CANTREALLOCMEMORY) {
+    if (h == NULL) {
         *num_error = CANTREALLOCMEM;
         return CANTREALLOCMEMORY;
     }
