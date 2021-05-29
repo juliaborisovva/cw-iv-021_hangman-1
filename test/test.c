@@ -202,16 +202,13 @@ CTEST(Fill_arr, Fill)
     ASSERT_STR(hidden_word, underline_mod);
 }
 
-CTEST(Open_dir, Without_errors)
+CTEST(Open_dir, Open_dir_work)
 {
     int value_dic, num_error;
-    open_dir(&value_dic, &num_error, "../dictionary");
-    ASSERT_EQUAL(WITHOUTERROR, num_error);
-}
-
-CTEST(Open_dir, Cant_open_dir)
-{
-    int value_dic, num_error;
-    open_dir(&value_dic, &num_error, "../dictionaaary");
-    ASSERT_EQUAL(CANTOPENDIR, num_error);
+    char* dir_path[] = {"../dictionary", "../dictionaaary"};
+    int exp[] = {WITHOUTERROR, CANTOPENDIR};
+    for (int i = 0; i < 2; i++) {
+        open_dir(&value_dic, &num_error, dir_path[i]);
+        ASSERT_EQUAL(exp[i], num_error);
+    }
 }
