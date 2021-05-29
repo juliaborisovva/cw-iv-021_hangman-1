@@ -157,7 +157,7 @@ CTEST(Get_words_array, Correct)
     ASSERT_EQUAL(WITHOUTERROR, num_error);
 }
 
-CTEST(Get_words_array, Cant_open_dir)
+CTEST(Get_words_array, Cant_open_file)
 {
     int value_words;
     int num_error;
@@ -175,7 +175,7 @@ CTEST(Skip_point, With)
     ASSERT_EQUAL(WITHPOINT, real);
 }
 
-CTEST(Skip_point, With_out)
+CTEST(Skip_point, Without)
 {
     char* name = "animals.txt";
     int real = skip_point(name);
@@ -200,4 +200,18 @@ CTEST(Fill_arr, Fill)
     underline_mod[length] = '\0';
 
     ASSERT_STR(hidden_word, underline_mod);
+}
+
+CTEST(Open_dir, Without_errors)
+{
+    int value_dic, num_error;
+    open_dir(&value_dic, &num_error, "../dictionary");
+    ASSERT_EQUAL(WITHOUTERROR, num_error);
+}
+
+CTEST(Open_dir, Cant_open_dir)
+{
+    int value_dic, num_error;
+    open_dir(&value_dic, &num_error, "../dictionaaary");
+    ASSERT_EQUAL(CANTOPENDIR, num_error);
 }
