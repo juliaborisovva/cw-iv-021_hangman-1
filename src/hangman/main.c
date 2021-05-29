@@ -16,7 +16,7 @@ int main()
 
     while (exit_condition) {
         int value_dic;
-        char** dir_name = open_dir(&value_dic, &num_error);
+        char** dir_name = open_dir(&value_dic, &num_error, "../dictionary");
         if ((error = check_error(num_error)) != WITHOUTERROR) {
             return error;
         }

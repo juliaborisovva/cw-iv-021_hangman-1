@@ -113,11 +113,11 @@ int check_theme(char* arr, int value_dic)
 void free_mem(char** dir_name, int value_dic, char** words, int value_words)
 {
     for (int r = value_dic - 1; r >= 0; r--) {
-        free(dir_name[r]); // очищаем память выделенную под массив слов
+        free(dir_name[r]);
     }
     free(dir_name);
     for (int r = value_words - 1; r >= 0; r--) {
-        free(words[r]); // очищаем память выделенную под массив слов
+        free(words[r]);
     }
     free(words);
 }
@@ -182,12 +182,12 @@ int cut_name(char* name, char** dir_name, int count_dic)
     return WITHOUTERROR;
 }
 
-char** open_dir(int* value_dic, int* num_error)
+char** open_dir(int* value_dic, int* num_error, char* path)
 {
     DIR* dir;
     struct dirent* entry;
 
-    dir = opendir("../dictionary");
+    dir = opendir(path);
     if (dir == NULL) {
         *num_error = CANTOPENDIR;
         return NULL;
