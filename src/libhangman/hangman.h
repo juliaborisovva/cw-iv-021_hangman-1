@@ -43,7 +43,7 @@ int skip_point(char* name);
 
 int cut_name(char* name, char** dir_name, int count_dic);
 
-char** open_dir(int* value_dic, int* num_error);
+char** open_dir(int* value_dic, int* num_error, char* path);
 
 int check_usage(char* used_ch, int max, char letter);
 

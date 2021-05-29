@@ -4,40 +4,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-CTEST(Check_theme, Correct)
+CTEST(Check_theme, Check_theme_work)
 {
-    char* choice = "3";
+    char* choice[] = {"3", "k", "-1", "5"};
+    int exp[] = {3, INCORTHEME, INCORTHEME, INCORTHEME};
     int value_dic = 4;
-    int theme = check_theme(choice, value_dic);
-    int exp = atoi(choice);
-    ASSERT_EQUAL(exp, theme);
-}
-
-CTEST(Check_theme, Incorrect_sign)
-{
-    char* choice = "k";
-    int value_dic = 4;
-    int theme = check_theme(choice, value_dic);
-    int exp = INCORTHEME;
-    ASSERT_EQUAL(exp, theme);
-}
-
-CTEST(Check_theme, Negative_theme)
-{
-    char* choice = "-1";
-    int value_dic = 4;
-    int theme = check_theme(choice, value_dic);
-    int exp = INCORTHEME;
-    ASSERT_EQUAL(exp, theme);
-}
-
-CTEST(Check_theme, Non_existent_theme)
-{
-    char* choice = "5";
-    int value_dic = 4;
-    int theme = check_theme(choice, value_dic);
-    int exp = INCORTHEME;
-    ASSERT_EQUAL(exp, theme);
+    for (int i = 0; i < 4; i++) {
+        int theme = check_theme(choice[i], value_dic);
+        ASSERT_EQUAL(exp[i], theme);
+    }
 }
 
 CTEST(Concat_path_name, Correct_path)
@@ -50,49 +25,30 @@ CTEST(Concat_path_name, Correct_path)
     ASSERT_EQUAL(WITHOUTERROR, num_error);
 }
 
-CTEST(Check_letter, Is_letter)
+CTEST(Check_letter, Check_letter_work)
 {
-    char* choice = "i";
-    int real = check_letter(choice);
-    int exp = CORRECTLETTER;
-    ASSERT_EQUAL(exp, real);
+    char* choice[] = {"i", "5", ";", "\n", "\t", " "};
+    int real = check_letter(choice[0]);
+    ASSERT_EQUAL(CORRECTLETTER, real);
+
+    for (int i = 1; i < 6; i++) {
+        int real = check_letter(choice[i]);
+        ASSERT_EQUAL(INCORRECTLETTER, real);
+    }
 }
 
-CTEST(Check_letter, Is_not_letter1)
-{
-    char* choice = "5";
-    int real = check_letter(choice);
-    int exp = INCORRECTLETTER;
-    ASSERT_EQUAL(exp, real);
-}
-
-CTEST(Check_letter, Is_not_letter2)
-{
-    char* choice = ";";
-    int real = check_letter(choice);
-    int exp = INCORRECTLETTER;
-    ASSERT_EQUAL(exp, real);
-}
-
-CTEST(Check_usage, Used)
+CTEST(Check_usage, Check_usage_work)
 {
     char* used_ch = "abcd";
-    char choice[1] = {'a'};
-    int real = check_usage(used_ch, strlen(used_ch), choice[0]);
-    int exp = USEDLETTER;
-    ASSERT_EQUAL(exp, real);
+    char choice[] = {'a', 'i'};
+    int exp[] = {USEDLETTER, UNUSEDLETTER};
+    for (int i = 0; i < 2; i++) {
+        int real = check_usage(used_ch, strlen(used_ch), choice[i]);
+        ASSERT_EQUAL(exp[i], real);
+    }
 }
 
-CTEST(Check_usage, Unused)
-{
-    char* used_ch = "abcd";
-    char choice[1] = {'i'};
-    int real = check_usage(used_ch, strlen(used_ch), choice[0]);
-    int exp = UNUSEDLETTER;
-    ASSERT_EQUAL(exp, real);
-}
-
-CTEST(Check_match, Match)
+CTEST(Check_match, Check_match_work)
 {
     char* word = "panda";
     size_t length = strlen(word);
@@ -100,32 +56,17 @@ CTEST(Check_match, Match)
     char guessed_word[length];
     char hidden_word[length];
     char underline[] = "_";
-    char letter[1] = {'p'};
+    char letter[] = {'p', 'c'};
 
     fill_arr(guessed_word, length, word);
     fill_arr(hidden_word, length - 1, underline);
+
     int no_match = check_match(
             guessed_word, hidden_word, length - 1, letter[0], &num_guess_ch);
-
-    ASSERT_NOT_EQUAL(no_match, length - 1);
-}
-
-CTEST(Check_match, No_match)
-{
-    char* word = "panda";
-    size_t length = strlen(word);
-    int num_guess_ch = length - 1;
-    char guessed_word[length];
-    char hidden_word[length];
-    char underline[] = "_";
-    char letter[1] = {'c'};
-
-    fill_arr(guessed_word, length, word);
-    fill_arr(hidden_word, length - 1, underline);
-    int no_match = check_match(
-            guessed_word, hidden_word, length - 1, letter[0], &num_guess_ch);
-
-    ASSERT_EQUAL(no_match, length - 1);
+    ASSERT_NOT_EQUAL(length - 1, no_match);
+    no_match = check_match(
+            guessed_word, hidden_word, length - 1, letter[1], &num_guess_ch);
+    ASSERT_EQUAL(length - 1, no_match);
 }
 
 CTEST(Cut_ext, Cut_ext)
@@ -147,40 +88,27 @@ CTEST(Cut_name, Cut)
     ASSERT_STR(exp, dir_name[0]);
 }
 
-CTEST(Get_words_array, Correct)
+CTEST(Get_words_array, Get_words_array_work)
 {
     int value_words;
     int num_error;
-    char* path = "../dictionary/animals.txt";
-    get_words_array(&value_words, path, &num_error);
+    char* path[] = {"../dictionary/animals.txt", "../dictionary/error.dat"};
+    int exp[] = {WITHOUTERROR, CANTOPENFILE};
 
-    ASSERT_EQUAL(WITHOUTERROR, num_error);
+    for (int i = 0; i < 2; i++) {
+        get_words_array(&value_words, path[i], &num_error);
+        ASSERT_EQUAL(exp[i], num_error);
+    }
 }
 
-CTEST(Get_words_array, Cant_open_dir)
+CTEST(Skip_point, Skip_point_work)
 {
-    int value_words;
-    int num_error;
-    char* path = "../dictionary/error.dat";
-    get_words_array(&value_words, path, &num_error);
-
-    ASSERT_EQUAL(CANTOPENFILE, num_error);
-}
-
-CTEST(Skip_point, With)
-{
-    char* name = ".";
-    int real = skip_point(name);
-
-    ASSERT_EQUAL(WITHPOINT, real);
-}
-
-CTEST(Skip_point, With_out)
-{
-    char* name = "animals.txt";
-    int real = skip_point(name);
-
-    ASSERT_EQUAL(WITHOUTPOINT, real);
+    char* name[] = {".", "animals.txt"};
+    int exp[] = {WITHPOINT, WITHOUTPOINT};
+    for (int i = 0; i < 2; i++) {
+        int real = skip_point(name[i]);
+        ASSERT_EQUAL(exp[i], real);
+    }
 }
 
 CTEST(Fill_arr, Fill)
@@ -200,4 +128,15 @@ CTEST(Fill_arr, Fill)
     underline_mod[length] = '\0';
 
     ASSERT_STR(hidden_word, underline_mod);
+}
+
+CTEST(Open_dir, Open_dir_work)
+{
+    int value_dic, num_error;
+    char* dir_path[] = {"../dictionary", "../dictionaaary"};
+    int exp[] = {WITHOUTERROR, CANTOPENDIR};
+    for (int i = 0; i < 2; i++) {
+        open_dir(&value_dic, &num_error, dir_path[i]);
+        ASSERT_EQUAL(exp[i], num_error);
+    }
 }
