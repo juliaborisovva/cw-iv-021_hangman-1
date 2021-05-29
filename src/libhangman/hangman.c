@@ -5,14 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { MAX_LENGTH = 255 };
-
-enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
-
-enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
-
-enum { INCORLETTER = '0', INCORRECTLETTER = -1, CORRECTLETTER = 0 };
-
 void print_hangman(int n)
 {
     switch (n) {
@@ -132,9 +124,9 @@ void free_mem(char** dir_name, int value_dic, char** words, int value_words)
 
 int choose_theme(int value_dic)
 {
-    char choice[MAX_LENGTH];
+    char choice[MAXLENGTH];
     int theme;
-    fgets(choice, MAX_LENGTH, stdin);
+    fgets(choice, MAXLENGTH, stdin);
     if ((theme = check_theme(choice, value_dic)) == INCORTHEME) {
         return INCORTHEME;
     }
@@ -160,11 +152,11 @@ void fill_arr(char* empty, int length, char* symbols)
     empty[length] = '\0';
 }
 
-char** mem_resize(int value, char** array)
+static char** mem_resize(int value, char** array)
 {
     char** h = realloc(array, value * sizeof(char*));
     if (h == NULL) {
-        return CANTREALLOCMEMORY;
+        return NULL;
     }
     return h;
 }
@@ -177,13 +169,17 @@ int skip_point(char name[])
     return WITHOUTPOINT;
 }
 
-void cut_name(char* name, char** dir_name, int count_dic)
+int cut_name(char* name, char** dir_name, int count_dic)
 {
-    char temp[MAX_LENGTH];
+    char temp[MAXLENGTH];
     strcpy(temp, name);
     cut_ext(temp);
     dir_name[count_dic] = (char*)malloc(strlen(temp) + 1);
+    if (dir_name[count_dic] == NULL) {
+        return CANTMALLOCMEM;
+    }
     strcpy(dir_name[count_dic], temp);
+    return WITHOUTERROR;
 }
 
 char** open_dir(int* value_dic, int* num_error)
@@ -194,14 +190,14 @@ char** open_dir(int* value_dic, int* num_error)
     dir = opendir("../dictionary");
     if (dir == NULL) {
         *num_error = CANTOPENDIR;
-        return CANTOPENDIRECT;
+        return NULL;
     }
 
     *value_dic = 200;
     char** dir_name = (char**)malloc((*value_dic) * sizeof(char*));
     if (dir_name == NULL) {
         *num_error = CANTMALLOCMEM;
-        return CANTMALLOCMEMORY;
+        return NULL;
     }
 
     int count_dic = 0;
@@ -213,14 +209,18 @@ char** open_dir(int* value_dic, int* num_error)
             if (h == NULL) {
                 free(dir_name);
                 *num_error = CANTREALLOCMEM;
-                return CANTREALLOCMEMORY;
+                return NULL;
             }
             dir_name = h;
         }
         if (skip_point(entry->d_name) == WITHPOINT) {
             continue;
         }
-        cut_name(entry->d_name, dir_name, count_dic);
+        int status = cut_name(entry->d_name, dir_name, count_dic);
+        if (status == CANTMALLOCMEM) {
+            *num_error = CANTMALLOCMEM;
+            return NULL;
+        }
         count_dic++;
     }
     closedir(dir);
@@ -230,7 +230,7 @@ char** open_dir(int* value_dic, int* num_error)
     if (h == NULL) {
         free(dir_name);
         *num_error = CANTREALLOCMEM;
-        return CANTREALLOCMEMORY;
+        return NULL;
     }
     *num_error = WITHOUTERROR;
     dir_name = h;
@@ -242,25 +242,25 @@ char** get_words_array(int* value_words, char path[], int* num_error)
     FILE* fp = fopen(path, "r");
     if (fp == NULL) {
         *num_error = CANTOPENFILE;
-        return CANNOTOPENFILE;
+        return NULL;
     }
 
     *value_words = 200;
     char** words = (char**)malloc((*value_words) * sizeof(char*));
     if (words == NULL) {
         *num_error = CANTMALLOCMEM;
-        return CANTMALLOCMEMORY;
+        return NULL;
     }
-    char tmp[MAX_LENGTH];
+    char tmp[MAXLENGTH];
     int count_word = 0;
 
-    while (fgets(tmp, MAX_LENGTH, fp)) {
+    while (fgets(tmp, MAXLENGTH, fp)) {
         if (count_word == *value_words) {
             *value_words *= 2;
             char** h = mem_resize(*value_words, words);
             if (h == NULL) {
                 *num_error = CANTREALLOCMEM;
-                return CANTREALLOCMEMORY;
+                return NULL;
             }
             words = h;
         }
@@ -269,7 +269,7 @@ char** get_words_array(int* value_words, char path[], int* num_error)
         if (words[count_word] == NULL) {
             free(words);
             *num_error = CANTMALLOCMEM;
-            return CANTMALLOCMEMORY;
+            return NULL;
         }
         strcpy(words[count_word], tmp);
         count_word++;
@@ -279,7 +279,7 @@ char** get_words_array(int* value_words, char path[], int* num_error)
     char** h = mem_resize(*value_words, words);
     if (h == NULL) {
         *num_error = CANTREALLOCMEM;
-        return CANTREALLOCMEMORY;
+        return NULL;
     }
     words = h;
     fclose(fp);
@@ -295,7 +295,7 @@ char* concat_path_name(char* dir_name, int* num_error)
     char* path = (char*)calloc(length, sizeof(char));
     if (path == NULL) {
         *num_error = CANTCALLOCMEM;
-        return CANTCALLOCMEMORY;
+        return NULL;
     }
     strcat(path, path_dir);
     strcat(path, dir_name);
@@ -330,8 +330,8 @@ int check_letter(char choice[])
 
 char enter_letter(char* used_ch, int max)
 {
-    char choice[MAX_LENGTH];
-    fgets(choice, MAX_LENGTH, stdin);
+    char choice[MAXLENGTH];
+    fgets(choice, MAXLENGTH, stdin);
     if (check_letter(choice) == INCORRECTLETTER) {
         return INCORLETTER;
     }
@@ -404,9 +404,9 @@ int play_game(char guessed_word[], char hidden_word[], int length)
 
 int play_again()
 {
-    char exit_status[MAX_LENGTH];
+    char exit_status[MAXLENGTH];
 
-    fgets(exit_status, MAX_LENGTH, stdin);
+    fgets(exit_status, MAXLENGTH, stdin);
     // можно проверять на правильность
     int yes = strncasecmp(exit_status, "Y", 1);
     int no = strncasecmp(exit_status, "N", 1);
