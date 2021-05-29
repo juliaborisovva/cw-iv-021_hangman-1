@@ -186,19 +186,21 @@ void cut_name(char* name, char** dir_name, int count_dic)
     strcpy(dir_name[count_dic], temp);
 }
 
-char** open_dir(int* value_dic)
+char** open_dir(int* value_dic, int* num_error)
 {
     DIR* dir;
     struct dirent* entry;
 
     dir = opendir("../dictionary");
     if (!dir) {
+        *num_error = CANTOPENDIR;
         return CANTOPENDIRECT;
     }
 
     *value_dic = 200;
     char** dir_name = (char**)malloc((*value_dic) * sizeof(char*));
     if (dir_name == NULL) {
+        *num_error = CANTMALLOCMEM;
         return CANTMALLOCMEMORY;
     }
 
@@ -210,6 +212,7 @@ char** open_dir(int* value_dic)
             char** h = mem_resize(*value_dic, dir_name);
             if (h == NULL) {
                 free(dir_name);
+                *num_error = CANTREALLOCMEM;
                 return CANTREALLOCMEMORY;
             }
             dir_name = h;
@@ -226,22 +229,26 @@ char** open_dir(int* value_dic)
     char** h = mem_resize(*value_dic, dir_name);
     if (h == CANTREALLOCMEMORY) {
         free(dir_name);
+        *num_error = CANTREALLOCMEM;
         return CANTREALLOCMEMORY;
     }
+    *num_error = WITHOUTERROR;
     dir_name = h;
     return dir_name;
 }
 
-char** get_words_array(int* value_words, char path[])
+char** get_words_array(int* value_words, char path[], int* num_error)
 {
     FILE* fp = fopen(path, "r");
     if (fp == NULL) {
+        *num_error = CANTOPENFILE;
         return CANNOTOPENFILE;
     }
 
     *value_words = 200;
     char** words = (char**)malloc((*value_words) * sizeof(char*));
     if (words == NULL) {
+        *num_error = CANTMALLOCMEM;
         return CANTMALLOCMEMORY;
     }
     char tmp[MAX_LENGTH];
@@ -252,6 +259,7 @@ char** get_words_array(int* value_words, char path[])
             *value_words *= 2;
             char** h = mem_resize(*value_words, words);
             if (h == NULL) {
+                *num_error = CANTREALLOCMEM;
                 return CANTREALLOCMEMORY;
             }
             words = h;
@@ -260,6 +268,7 @@ char** get_words_array(int* value_words, char path[])
         words[count_word] = (char*)malloc(strlen(tmp) + 1);
         if (words[count_word] == NULL) {
             free(words);
+            *num_error = CANTMALLOCMEM;
             return CANTMALLOCMEMORY;
         }
         strcpy(words[count_word], tmp);
@@ -269,25 +278,29 @@ char** get_words_array(int* value_words, char path[])
     *value_words = count_word;
     char** h = mem_resize(*value_words, words);
     if (h == CANTREALLOCMEMORY) {
+        *num_error = CANTREALLOCMEM;
         return CANTREALLOCMEMORY;
     }
     words = h;
     fclose(fp);
+    *num_error = WITHOUTERROR;
     return words;
 }
 
-char* concat_path_name(char* dir_name)
+char* concat_path_name(char* dir_name, int* num_error)
 {
     char* path_dir = "../dictionary/";
     char* expansion = ".txt";
     int length = strlen(path_dir) + strlen(expansion) + strlen(dir_name);
     char* path = (char*)calloc(length, sizeof(char));
     if (path == NULL) {
+        *num_error = CANTCALLOCMEM;
         return CANTCALLOCMEMORY;
     }
     strcat(path, path_dir);
     strcat(path, dir_name);
     strcat(path, expansion);
+    *num_error = WITHOUTERROR;
     return path;
 }
 
@@ -319,7 +332,7 @@ char enter_letter(char* used_ch, int max)
 {
     char choice[MAX_LENGTH];
     fgets(choice, MAX_LENGTH, stdin);
-    if (check_letter(choice[]) == INCORRECTLETTER) {
+    if (check_letter(choice) == INCORRECTLETTER) {
         return INCORLETTER;
     }
     if (check_usage(used_ch, max, choice[0]) != UNUSEDLETTER) {
@@ -407,4 +420,27 @@ int play_again()
         return EXIT;
     }
     return EXIT;
+}
+
+int check_error(int error)
+{
+    switch (error) {
+    case -1:
+        printf("Can not read directory.\n");
+        return CANTOPENDIR;
+    case -2:
+        printf("Cannot open file.\n");
+        return CANTOPENFILE;
+    case -3:
+        printf("Memory is not reallocated\n");
+        return CANTREALLOCMEM;
+    case -4:
+        printf("The paths did not merge.\n");
+        return CANTCALLOCMEM;
+    case -5:
+        printf("Memory is not malloced\n");
+        return CANTMALLOCMEM;
+    default:
+        return WITHOUTERROR;
+    }
 }

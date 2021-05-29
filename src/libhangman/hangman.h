@@ -8,10 +8,11 @@
 
 enum {
     CANTOPENDIR = -1,
-    CANTOPENFILE = -1,
-    CANTREALLOCMEM = -1,
-    CANTCALLOCMEM = -1,
-    CANTMALLOCMEM = -1
+    CANTOPENFILE = -2,
+    CANTREALLOCMEM = -3,
+    CANTCALLOCMEM = -4,
+    CANTMALLOCMEM = -5,
+    WITHOUTERROR = 0
 };
 
 enum { WIN = 1, LOSE = 2 };
@@ -42,9 +43,11 @@ int skip_point(char* name);
 
 void cut_name(char* name, char** dir_name, int count_dic);
 
-char** open_dir(int* value_dic);
+char** open_dir(int* value_dic, int* num_error);
 
 int check_usage(char* used_ch, int max, char letter);
+
+int check_letter(char choice[]);
 
 char enter_letter(char* used_ch, int max);
 
@@ -57,8 +60,8 @@ int play_again();
 
 int play_again_main();
 
-char* concat_path_name(char* dir_name);
+char* concat_path_name(char* dir_name, int* num_error);
 
-char** get_words_array(int* value_words, char path[]);
+char** get_words_array(int* value_words, char path[], int* num_error);
 
-int print_errors(char** n);
+int check_error(int error);
