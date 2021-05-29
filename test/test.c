@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
-
-enum { INCORRECTLETTER = -1, CORRECTLETTER = 0 };
-
 CTEST(Check_theme, Correct)
 {
     char* choice = "3";
@@ -87,7 +83,7 @@ CTEST(Check_usage, Used)
     ASSERT_EQUAL(exp, real);
 }
 
-CTEST(Check_usage, unused)
+CTEST(Check_usage, Unused)
 {
     char* used_ch = "abcd";
     char choice[1] = {'i'};
@@ -113,6 +109,7 @@ CTEST(Check_match, Match)
 
     ASSERT_NOT_EQUAL(no_match, length - 1);
 }
+
 CTEST(Check_match, No_match)
 {
     char* word = "panda";
@@ -129,4 +126,24 @@ CTEST(Check_match, No_match)
             guessed_word, hidden_word, length - 1, letter[0], &num_guess_ch);
 
     ASSERT_EQUAL(no_match, length - 1);
+}
+
+CTEST(Cut_ext, Cut_ext)
+{
+    char file_name[] = "trpo.txt";
+    char exp[] = "trpo";
+    cut_ext(file_name);
+    ASSERT_STR(exp, file_name);
+}
+
+CTEST(Cut_name, Cut)
+{
+    char* d_name = "animals.txt";
+    char exp[] = "animals";
+    int count_dic = 0;
+    char* dir_name[MAXLENGTH];
+    int status = cut_name(d_name, dir_name, count_dic);
+    int exp2 = WITHOUTERROR;
+    ASSERT_EQUAL(exp2, status);
+    ASSERT_STR(exp, dir_name[0]);
 }
