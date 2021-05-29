@@ -10,20 +10,15 @@
 int main()
 {
     int exit_condition = PLAY;
+    int num_error;
+    int error = WITHOUTERROR;
     srand(time(NULL));
 
     while (exit_condition) {
         int value_dic;
-        char** dir_name = open_dir(&value_dic);
-        if (dir_name == CANTOPENDIRECT) {
-            printf("Can not read directory.\n");
-            return CANTOPENDIR;
-        } else if (dir_name == CANTMALLOCMEMORY) {
-            printf("Memory is not malloced\n");
-            return CANTMALLOCMEM;
-        } else if (dir_name == CANTREALLOCMEMORY) {
-            printf("Memory is not reallocated\n");
-            return CANTREALLOCMEM;
+        char** dir_name = open_dir(&value_dic, &num_error);
+        if ((error = check_error(num_error)) != WITHOUTERROR) {
+            return error;
         }
 
         system("clear");
@@ -38,23 +33,15 @@ int main()
         }
 
         char* path;
-        path = concat_path_name(dir_name[theme - 1]);
-        if (path == CANTCALLOCMEMORY) {
-            printf("The paths did not merge.\n");
-            return CANTCALLOCMEM;
+        path = concat_path_name(dir_name[theme - 1], &num_error);
+        if ((error = check_error(num_error)) != WITHOUTERROR) {
+            return error;
         }
 
         int value_words;
-        char** words = get_words_array(&value_words, path);
-        if (words == CANNOTOPENFILE) {
-            printf("Cannot open file.\n");
-            return CANTOPENFILE;
-        } else if (words == CANTMALLOCMEMORY) {
-            printf("Memory is not malloced\n");
-            return CANTMALLOCMEM;
-        } else if (words == CANTREALLOCMEMORY) {
-            printf("Memory is not reallocated\n");
-            return CANTREALLOCMEM;
+        char** words = get_words_array(&value_words, path, &num_error);
+        if ((error = check_error(num_error)) != WITHOUTERROR) {
+            return error;
         }
 
         int word_number = get_rand(0, value_words - 1);
@@ -77,14 +64,21 @@ int main()
         free_mem(dir_name, value_dic, words, value_words);
 
         printf("\nDo you want to play again? Y/N\n");
-        while ((exit_condition = play_again()) == INCORRECT) {
-            system("clear");
-            printf("\nDo you want to play again? Y/N\n");
-            printf("\nIncorrect answer, please try again.\n");
-            continue;
-        }
-        if (exit_condition == EXIT) {
-            printf("\nThank you. Good bye!\n");
+        while (1) {
+            exit_condition = play_again();
+            if (exit_condition == INCORRECT) {
+                system("clear");
+                printf("\nDo you want to play again? Y/N\n");
+                printf("\nIncorrect answer, please try again.\n");
+                continue;
+            }
+            if (exit_condition == EXIT) {
+                printf("\nThank you. Good bye!\n");
+                return EXIT;
+            }
+            if (exit_condition == PLAY) {
+                break;
+            }
         }
     }
     return 0;
