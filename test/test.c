@@ -143,7 +143,61 @@ CTEST(Cut_name, Cut)
     int count_dic = 0;
     char* dir_name[MAXLENGTH];
     int status = cut_name(d_name, dir_name, count_dic);
-    int exp2 = WITHOUTERROR;
-    ASSERT_EQUAL(exp2, status);
+    ASSERT_EQUAL(WITHOUTERROR, status);
     ASSERT_STR(exp, dir_name[0]);
+}
+
+CTEST(Get_words_array, Correct)
+{
+    int value_words;
+    int num_error;
+    char* path = "../dictionary/animals.txt";
+    get_words_array(&value_words, path, &num_error);
+
+    ASSERT_EQUAL(WITHOUTERROR, num_error);
+}
+
+CTEST(Get_words_array, Cant_open_dir)
+{
+    int value_words;
+    int num_error;
+    char* path = "../dictionary/error.dat";
+    get_words_array(&value_words, path, &num_error);
+
+    ASSERT_EQUAL(CANTOPENFILE, num_error);
+}
+
+CTEST(Skip_point, With)
+{
+    char* name = ".";
+    int real = skip_point(name);
+
+    ASSERT_EQUAL(WITHPOINT, real);
+}
+
+CTEST(Skip_point, With_out)
+{
+    char* name = "animals.txt";
+    int real = skip_point(name);
+
+    ASSERT_EQUAL(WITHOUTPOINT, real);
+}
+
+CTEST(Fill_arr, Fill)
+{
+    char* word = "mouse";
+    size_t length = strlen(word);
+    char guessed_word[length];
+    char hidden_word[length];
+    char underline[] = "_";
+
+    fill_arr(guessed_word, length, word);
+    fill_arr(hidden_word, length, underline);
+
+    ASSERT_STR(guessed_word, word);
+
+    char underline_mod[] = "_____";
+    underline_mod[length] = '\0';
+
+    ASSERT_STR(hidden_word, underline_mod);
 }
