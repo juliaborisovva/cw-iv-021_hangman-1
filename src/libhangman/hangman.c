@@ -284,8 +284,8 @@ char* concat_path_name(char* dir_name, int* num_error)
 {
     char* path_dir = "../dictionary/";
     char* expansion = ".txt";
-    int length = strlen(path_dir) + strlen(expansion) + strlen(dir_name);
-    char* path = (char*)calloc(length, sizeof(char));
+    int length_path = strlen(path_dir) + strlen(expansion) + strlen(dir_name);
+    char* path = (char*)calloc(length_path, sizeof(char));
     if (path == NULL) {
         *num_error = CANTCALLOCMEM;
         return NULL;
@@ -352,7 +352,7 @@ int check_match(
 int play_game(char guessed_word[], char hidden_word[], int length)
 {
     int num_error = 0;
-    int num_guess_ch = length - 1;
+    int num_guess_ch = length;
     char used_ch[26];
     int used_ch_end = 0;
 
@@ -385,8 +385,8 @@ int play_game(char guessed_word[], char hidden_word[], int length)
         }
 
         int no_match = check_match(
-                guessed_word, hidden_word, length - 1, letter, &num_guess_ch);
-        if (no_match == length - 1) {
+                guessed_word, hidden_word, length, letter, &num_guess_ch);
+        if (no_match == length) {
             num_error++;
         }
         used_ch[used_ch_end] = tolower(letter);
