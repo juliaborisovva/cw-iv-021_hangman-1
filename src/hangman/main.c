@@ -44,7 +44,7 @@ int main()
         }
 
         int word_number = get_rand(0, value_words - 1);
-        int length = strlen(words[word_number]) - 1;
+        size_t length = strlen(words[word_number]) - 1;
 
         char guessed_word[length];
         char hidden_word[length];
