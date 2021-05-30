@@ -155,9 +155,6 @@ void fill_arr(char* empty, int length, char* symbols)
 static char** mem_resize(int value, char** array)
 {
     char** h = realloc(array, value * sizeof(char*));
-    if (h == NULL) {
-        return NULL;
-    }
     return h;
 }
 
