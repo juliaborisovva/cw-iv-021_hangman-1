@@ -110,16 +110,12 @@ int check_theme(char* arr, int value_dic)
     return theme;
 }
 
-void free_mem(char** dir_name, int value_dic, char** words, int value_words)
+void free_mem_arr(char** array, int value)
 {
-    for (int r = value_dic - 1; r >= 0; r--) {
-        free(dir_name[r]);
+    for (int r = value - 1; r >= 0; r--) {
+        free(array[r]);
     }
-    free(dir_name);
-    for (int r = value_words - 1; r >= 0; r--) {
-        free(words[r]);
-    }
-    free(words);
+    free(array);
 }
 
 int choose_theme(int value_dic)
@@ -189,6 +185,7 @@ char** open_dir(int* value_dic, int* num_error, char* path)
     *value_dic = 200;
     char** dir_name = (char**)malloc((*value_dic) * sizeof(char*));
     if (dir_name == NULL) {
+        closedir(dir);
         *num_error = CANTMALLOCMEM;
         return NULL;
     }
@@ -200,7 +197,8 @@ char** open_dir(int* value_dic, int* num_error, char* path)
             *value_dic *= 2;
             char** h = mem_resize(*value_dic, dir_name);
             if (h == NULL) {
-                free(dir_name);
+                closedir(dir);
+                free_mem_arr(dir_name, count_dic);
                 *num_error = CANTREALLOCMEM;
                 return NULL;
             }
@@ -211,6 +209,8 @@ char** open_dir(int* value_dic, int* num_error, char* path)
         }
         int status = cut_name(entry->d_name, dir_name, count_dic);
         if (status == CANTMALLOCMEM) {
+            closedir(dir);
+            free_mem_arr(dir_name, count_dic);
             *num_error = CANTMALLOCMEM;
             return NULL;
         }
@@ -221,7 +221,7 @@ char** open_dir(int* value_dic, int* num_error, char* path)
     *value_dic = count_dic;
     char** h = mem_resize(*value_dic, dir_name);
     if (h == NULL) {
-        free(dir_name);
+        free_mem_arr(dir_name, count_dic);
         *num_error = CANTREALLOCMEM;
         return NULL;
     }
@@ -241,6 +241,7 @@ char** get_words_array(int* value_words, char path[], int* num_error)
     *value_words = 200;
     char** words = (char**)malloc((*value_words) * sizeof(char*));
     if (words == NULL) {
+        fclose(fp);
         *num_error = CANTMALLOCMEM;
         return NULL;
     }
@@ -252,6 +253,8 @@ char** get_words_array(int* value_words, char path[], int* num_error)
             *value_words *= 2;
             char** h = mem_resize(*value_words, words);
             if (h == NULL) {
+                fclose(fp);
+                free_mem_arr(words, count_word);
                 *num_error = CANTREALLOCMEM;
                 return NULL;
             }
@@ -260,22 +263,24 @@ char** get_words_array(int* value_words, char path[], int* num_error)
 
         words[count_word] = (char*)malloc(strlen(tmp) + 1);
         if (words[count_word] == NULL) {
-            free(words);
+            fclose(fp);
+            free_mem_arr(words, count_word);
             *num_error = CANTMALLOCMEM;
             return NULL;
         }
         strcpy(words[count_word], tmp);
         count_word++;
     }
+    fclose(fp);
 
     *value_words = count_word;
     char** h = mem_resize(*value_words, words);
     if (h == NULL) {
+        free_mem_arr(words, count_word);
         *num_error = CANTREALLOCMEM;
         return NULL;
     }
     words = h;
-    fclose(fp);
     *num_error = WITHOUTERROR;
     return words;
 }
@@ -358,7 +363,7 @@ int play_game(char guessed_word[], char hidden_word[], int length)
     int used_ch_end = 0;
 
     while (num_guess_ch >= 0 || num_error <= 9) {
-        // system("clear");
+        system("clear");
         print_hangman(num_error);
 
         if (num_error == 9) {
