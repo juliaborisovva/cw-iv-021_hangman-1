@@ -125,12 +125,8 @@ void free_mem(char** dir_name, int value_dic, char** words, int value_words)
 int choose_theme(int value_dic)
 {
     char choice[MAXLENGTH];
-    int theme;
     fgets(choice, MAXLENGTH, stdin);
-    if ((theme = check_theme(choice, value_dic)) == INCORTHEME) {
-        return INCORTHEME;
-    }
-    return theme;
+    return check_theme(choice, value_dic);
 }
 
 int get_rand(int min, int max)
