@@ -44,14 +44,14 @@ int main()
         }
 
         int word_number = get_rand(0, value_words - 1);
-        size_t length = strlen(words[word_number]);
+        int length = strlen(words[word_number]) - 1;
 
         char guessed_word[length];
         char hidden_word[length];
         char underline[] = "_";
 
         fill_arr(guessed_word, length, words[word_number]);
-        fill_arr(hidden_word, length - 1, underline);
+        fill_arr(hidden_word, length, underline);
 
         int result = play_game(guessed_word, hidden_word, length);
         if (result == WIN) {

@@ -9,17 +9,17 @@ enum {
     WITHOUTERROR = 0
 };
 
+enum { INCORLETTER = '0', INCORRECTLETTER = -1, CORRECTLETTER = 0 };
+
+enum { INCORRECT = -2, PLAY = 1, EXIT = 0 };
+
 enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
-enum { INCORLETTER = '0', INCORRECTLETTER = -1, CORRECTLETTER = 0 };
-
-enum { MAXLENGTH = 255 };
-
 enum { WIN = 1, LOSE = 2 };
 
-enum { INCORRECT = -2, PLAY = 1, EXIT = 0 };
+enum { MAXLENGTH = 255 };
 
 enum { INCORTHEME = -1 };
 
@@ -45,6 +45,10 @@ int cut_name(char* name, char** dir_name, int count_dic);
 
 char** open_dir(int* value_dic, int* num_error, char* path);
 
+char** get_words_array(int* value_words, char path[], int* num_error);
+
+char* concat_path_name(char* dir_name, int* num_error);
+
 int check_usage(char* used_ch, int max, char letter);
 
 int check_letter(char choice[]);
@@ -57,9 +61,5 @@ int check_match(
 int play_game(char guessed_word[], char hidden_word[], int length);
 
 int play_again();
-
-char* concat_path_name(char* dir_name, int* num_error);
-
-char** get_words_array(int* value_words, char path[], int* num_error);
 
 int check_error(int error);
