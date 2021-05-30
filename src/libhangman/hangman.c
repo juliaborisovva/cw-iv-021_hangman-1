@@ -378,9 +378,11 @@ int play_game(char guessed_word[], char hidden_word[], int length)
             printf("%c", used_ch[i]);
         }
         if (num_guess_ch == 0) {
+            printf("\n\nYou win!\n");
             return WIN;
         }
         if (num_error == 9) {
+            printf("\n\nYou lose!\n");
             return LOSE;
         }
 

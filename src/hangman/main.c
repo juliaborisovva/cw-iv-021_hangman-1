@@ -55,12 +55,7 @@ int main()
         fill_arr(guessed_word, length, words[word_number]);
         fill_arr(hidden_word, length, underline);
 
-        int result = play_game(guessed_word, hidden_word, length);
-        if (result == WIN) {
-            printf("\nYou win!\n");
-        } else {
-            printf("\nYou lose!\n");
-        }
+        play_game(guessed_word, hidden_word, length);
 
         free_mem_arr(words, value_words);
 
