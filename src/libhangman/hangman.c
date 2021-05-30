@@ -155,9 +155,6 @@ void fill_arr(char* empty, int length, char* symbols)
 static char** mem_resize(int value, char** array)
 {
     char** h = realloc(array, value * sizeof(char*));
-    if (h == NULL) {
-        return NULL;
-    }
     return h;
 }
 
@@ -407,7 +404,6 @@ int play_again()
     char exit_status[MAXLENGTH];
 
     fgets(exit_status, MAXLENGTH, stdin);
-    // можно проверять на правильность
     int yes = strncasecmp(exit_status, "Y", 1);
     int no = strncasecmp(exit_status, "N", 1);
     if ((yes != 0 && no != 0) || strlen(exit_status) > 2) {

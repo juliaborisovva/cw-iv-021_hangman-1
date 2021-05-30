@@ -6,7 +6,7 @@
 
 CTEST(Check_theme, Check_theme_work)
 {
-    char* choice[] = {"3", "k", "-1", "5"};
+    char* choice[] = {"3", "k", "}", "5"};
     int exp[] = {3, INCORTHEME, INCORTHEME, INCORTHEME};
     int value_dic = 4;
     for (int i = 0; i < 4; i++) {
