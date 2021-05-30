@@ -416,9 +416,6 @@ int play_again()
     if (yes == 0) {
         return PLAY;
     }
-    if (no == 0) {
-        return EXIT;
-    }
     return EXIT;
 }
 
