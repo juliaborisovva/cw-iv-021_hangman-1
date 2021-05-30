@@ -51,22 +51,22 @@ CTEST(Check_usage, Check_usage_work)
 CTEST(Check_match, Check_match_work)
 {
     char* word = "panda";
-    size_t length = strlen(word);
-    int num_guess_ch = length - 1;
+    size_t length = strlen(word) - 1;
+    int num_guess_ch = length;
     char guessed_word[length];
     char hidden_word[length];
     char underline[] = "_";
     char letter[] = {'p', 'c'};
 
     fill_arr(guessed_word, length, word);
-    fill_arr(hidden_word, length - 1, underline);
+    fill_arr(hidden_word, length, underline);
 
     int no_match = check_match(
-            guessed_word, hidden_word, length - 1, letter[0], &num_guess_ch);
-    ASSERT_NOT_EQUAL(length - 1, no_match);
+            guessed_word, hidden_word, length, letter[0], &num_guess_ch);
+    ASSERT_NOT_EQUAL(length, no_match);
     no_match = check_match(
-            guessed_word, hidden_word, length - 1, letter[1], &num_guess_ch);
-    ASSERT_EQUAL(length - 1, no_match);
+            guessed_word, hidden_word, length, letter[1], &num_guess_ch);
+    ASSERT_EQUAL(length, no_match);
 }
 
 CTEST(Cut_ext, Cut_ext)
@@ -92,7 +92,7 @@ CTEST(Get_words_array, Get_words_array_work)
 {
     int value_words;
     int num_error;
-    char* path[] = {"../dictionary/animals.txt", "../dictionary/error.dat"};
+    char* path[] = {"dictionary/animals.txt", "dictionary/error.dat"};
     int exp[] = {WITHOUTERROR, CANTOPENFILE};
 
     for (int i = 0; i < 2; i++) {
@@ -133,7 +133,7 @@ CTEST(Fill_arr, Fill)
 CTEST(Open_dir, Open_dir_work)
 {
     int value_dic, num_error;
-    char* dir_path[] = {"../dictionary", "../dictionaaary"};
+    char* dir_path[] = {"dictionary", "dictionaaary"};
     int exp[] = {WITHOUTERROR, CANTOPENDIR};
     for (int i = 0; i < 2; i++) {
         open_dir(&value_dic, &num_error, dir_path[i]);
