@@ -158,16 +158,16 @@ int skip_point(char name[])
     return WITHOUTPOINT;
 }
 
-int cut_name(char* name, char** dir_name, int count_dic)
+int cut_name(char* name, char** dir_name, int num_dic)
 {
     char temp[MAXLENGTH];
     strcpy(temp, name);
     cut_ext(temp);
-    dir_name[count_dic] = (char*)malloc(strlen(temp) + 1);
-    if (dir_name[count_dic] == NULL) {
+    dir_name[num_dic] = (char*)malloc(strlen(temp) + 1);
+    if (dir_name[num_dic] == NULL) {
         return CANTMALLOCMEM;
     }
-    strcpy(dir_name[count_dic], temp);
+    strcpy(dir_name[num_dic], temp);
     return WITHOUTERROR;
 }
 
