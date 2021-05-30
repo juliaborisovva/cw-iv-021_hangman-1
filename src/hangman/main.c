@@ -11,14 +11,13 @@ int main()
 {
     int exit_condition = PLAY;
     int num_error;
-    int error = WITHOUTERROR;
     srand(time(NULL));
 
     while (exit_condition) {
         int value_dic;
         char** dir_name = open_dir(&value_dic, &num_error, "../dictionary");
-        if ((error = check_error(num_error)) != WITHOUTERROR) {
-            return error;
+        if (check_error(num_error) != WITHOUTERROR) {
+            return num_error;
         }
 
         system("clear");
@@ -33,14 +32,17 @@ int main()
         }
 
         char* path = concat_path_name(dir_name[theme - 1], &num_error);
-        if ((error = check_error(num_error)) != WITHOUTERROR) {
-            return error;
+        free_mem_arr(dir_name, value_dic);
+
+        if (check_error(num_error) != WITHOUTERROR) {
+            return num_error;
         }
 
         int value_words;
         char** words = get_words_array(&value_words, path, &num_error);
-        if ((error = check_error(num_error)) != WITHOUTERROR) {
-            return error;
+        free(path);
+        if (check_error(num_error) != WITHOUTERROR) {
+            return num_error;
         }
 
         int word_number = get_rand(0, value_words - 1);
@@ -53,14 +55,9 @@ int main()
         fill_arr(guessed_word, length, words[word_number]);
         fill_arr(hidden_word, length, underline);
 
-        int result = play_game(guessed_word, hidden_word, length);
-        if (result == WIN) {
-            printf("\nYou win!\n");
-        } else {
-            printf("\nYou lose!\n");
-        }
+        play_game(guessed_word, hidden_word, length);
 
-        free_mem(dir_name, value_dic, words, value_words);
+        free_mem_arr(words, value_words);
 
         printf("\nDo you want to play again? Y/N\n");
         while ((exit_condition = play_again()) == INCORRECT) {

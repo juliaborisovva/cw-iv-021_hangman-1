@@ -31,7 +31,7 @@ void print_theme_menu(char** dir_name, int value_dic);
 
 int check_theme(char* arr, int value_dic);
 
-void free_mem(char** dir_name, int value_dic, char** words, int value_words);
+void free_mem_arr(char** array, int value);
 
 int choose_theme(int value_dic);
 
