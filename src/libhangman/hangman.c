@@ -359,7 +359,7 @@ int play_game(char guessed_word[], char hidden_word[], int length)
 {
     int num_error = 0;
     int num_guess_ch = length;
-    char used_ch[26];
+    char used_ch[ALPHABETSIZE];
     int used_ch_end = 0;
 
     while (num_guess_ch >= 0 || num_error <= MAXERROR) {
