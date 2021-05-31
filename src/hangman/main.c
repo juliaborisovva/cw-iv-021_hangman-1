@@ -54,10 +54,9 @@ int main()
 
         fill_arr(guessed_word, length, words[word_number]);
         fill_arr(hidden_word, length, underline);
+        free_mem_arr(words, value_words);
 
         play_game(guessed_word, hidden_word, length);
-
-        free_mem_arr(words, value_words);
 
         printf("\nDo you want to play again? Y/N\n");
         while ((exit_condition = play_again()) == INCORRECT) {
