@@ -27,7 +27,7 @@ void print_hangman(int n);
 
 void cut_ext(char* fname);
 
-void print_theme_menu(char** dir_name, int value_dic);
+void print_theme_menu(char** dic_name, int value_dic);
 
 int check_theme(char* arr, int value_dic);
 
@@ -41,13 +41,13 @@ void fill_arr(char* empty, int length, char* symbols);
 
 int skip_point(char* name);
 
-int cut_name(char* name, char** dir_name, int count_dic);
+int cut_name(char* name, char** dic_name, int count_dic);
 
 char** open_dir(int* value_dic, int* num_error, char* path);
 
 char** get_words_array(int* value_words, char path[], int* num_error);
 
-char* concat_path_name(char* dir_name, int* num_error);
+char* concat_path_name(char* dic_name, int* num_error);
 
 int check_usage(char* used_ch, int max, char letter);
 

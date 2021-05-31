@@ -15,24 +15,24 @@ int main()
 
     while (exit_condition) {
         int value_dic;
-        char** dir_name = open_dir(&value_dic, &num_error, "../dictionary");
+        char** dic_name = open_dir(&value_dic, &num_error, "../dictionary");
         if (check_error(num_error) != WITHOUTERROR) {
             return num_error;
         }
 
         system("clear");
-        print_theme_menu(dir_name, value_dic);
+        print_theme_menu(dic_name, value_dic);
         printf("Please, choose theme for your game:\n");
         int theme;
         while ((theme = choose_theme(value_dic)) == INCORTHEME) {
             system("clear");
-            print_theme_menu(dir_name, value_dic);
+            print_theme_menu(dic_name, value_dic);
             printf("It isn't correct punct of menu. Try again.\n");
             continue;
         }
 
-        char* path = concat_path_name(dir_name[theme - 1], &num_error);
-        free_mem_arr(dir_name, value_dic);
+        char* path = concat_path_name(dic_name[theme - 1], &num_error);
+        free_mem_arr(dic_name, value_dic);
 
         if (check_error(num_error) != WITHOUTERROR) {
             return num_error;

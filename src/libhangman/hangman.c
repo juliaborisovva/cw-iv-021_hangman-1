@@ -87,11 +87,11 @@ void cut_ext(char* fname)
     }
 }
 
-void print_theme_menu(char** dir_name, int value_dic)
+void print_theme_menu(char** dic_name, int value_dic)
 {
     printf("Theme menu:\n\n");
     for (int i = 0; i < value_dic; i++) {
-        printf("%d - theme \"%s\"\n", i + 1, dir_name[i]);
+        printf("%d - theme \"%s\"\n", i + 1, dic_name[i]);
     }
     printf("\n");
 }
@@ -158,16 +158,16 @@ int skip_point(char name[])
     return WITHOUTPOINT;
 }
 
-int cut_name(char* name, char** dir_name, int num_dic)
+int cut_name(char* name, char** dic_name, int num_dic)
 {
     char temp[MAXLENGTH];
     strcpy(temp, name);
     cut_ext(temp);
-    dir_name[num_dic] = (char*)malloc(strlen(temp) + 1);
-    if (dir_name[num_dic] == NULL) {
+    dic_name[num_dic] = (char*)malloc(strlen(temp) + 1);
+    if (dic_name[num_dic] == NULL) {
         return CANTMALLOCMEM;
     }
-    strcpy(dir_name[num_dic], temp);
+    strcpy(dic_name[num_dic], temp);
     return WITHOUTERROR;
 }
 
@@ -183,8 +183,8 @@ char** open_dir(int* value_dic, int* num_error, char* path)
     }
 
     *value_dic = 200;
-    char** dir_name = (char**)malloc((*value_dic) * sizeof(char*));
-    if (dir_name == NULL) {
+    char** dic_name = (char**)malloc((*value_dic) * sizeof(char*));
+    if (dic_name == NULL) {
         closedir(dir);
         *num_error = CANTMALLOCMEM;
         return NULL;
@@ -195,22 +195,22 @@ char** open_dir(int* value_dic, int* num_error, char* path)
     while ((entry = readdir(dir)) != NULL) {
         if (count_dic == *value_dic) {
             *value_dic *= 2;
-            char** h = mem_resize(*value_dic, dir_name);
+            char** h = mem_resize(*value_dic, dic_name);
             if (h == NULL) {
                 closedir(dir);
-                free_mem_arr(dir_name, count_dic);
+                free_mem_arr(dic_name, count_dic);
                 *num_error = CANTREALLOCMEM;
                 return NULL;
             }
-            dir_name = h;
+            dic_name = h;
         }
         if (skip_point(entry->d_name) == WITHPOINT) {
             continue;
         }
-        int status = cut_name(entry->d_name, dir_name, count_dic);
+        int status = cut_name(entry->d_name, dic_name, count_dic);
         if (status == CANTMALLOCMEM) {
             closedir(dir);
-            free_mem_arr(dir_name, count_dic);
+            free_mem_arr(dic_name, count_dic);
             *num_error = CANTMALLOCMEM;
             return NULL;
         }
@@ -219,15 +219,15 @@ char** open_dir(int* value_dic, int* num_error, char* path)
     closedir(dir);
 
     *value_dic = count_dic;
-    char** h = mem_resize(*value_dic, dir_name);
+    char** h = mem_resize(*value_dic, dic_name);
     if (h == NULL) {
-        free_mem_arr(dir_name, count_dic);
+        free_mem_arr(dic_name, count_dic);
         *num_error = CANTREALLOCMEM;
         return NULL;
     }
     *num_error = WITHOUTERROR;
-    dir_name = h;
-    return dir_name;
+    dic_name = h;
+    return dic_name;
 }
 
 char** get_words_array(int* value_words, char path[], int* num_error)
@@ -285,19 +285,19 @@ char** get_words_array(int* value_words, char path[], int* num_error)
     return words;
 }
 
-char* concat_path_name(char* dir_name, int* num_error)
+char* concat_path_name(char* dic_name, int* num_error)
 {
     char* path_dir = "../dictionary/";
     char* expansion = ".txt";
     int length_path
-            = strlen(path_dir) + strlen(expansion) + strlen(dir_name) + 1;
+            = strlen(path_dir) + strlen(expansion) + strlen(dic_name) + 1;
     char* path = (char*)calloc(length_path, sizeof(char));
     if (path == NULL) {
         *num_error = CANTCALLOCMEM;
         return NULL;
     }
     strcat(path, path_dir);
-    strcat(path, dir_name);
+    strcat(path, dic_name);
     strcat(path, expansion);
     *num_error = WITHOUTERROR;
     return path;
