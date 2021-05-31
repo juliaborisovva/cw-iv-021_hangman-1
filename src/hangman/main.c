@@ -45,7 +45,7 @@ int main()
             return num_error;
         }
 
-        int word_number = get_rand(0, value_words - 1);
+        int word_number = get_rand(0, value_words);
         size_t length = strlen(words[word_number]) - 1;
 
         char guessed_word[length];
