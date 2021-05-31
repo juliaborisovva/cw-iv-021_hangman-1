@@ -362,7 +362,7 @@ int play_game(char guessed_word[], char hidden_word[], int length)
     char used_ch[ALPHABETSIZE];
     int used_ch_end = 0;
 
-    while (num_guess_ch >= 0 || num_error <= MAXERROR) {
+    while (1) {
         system("clear");
         print_hangman(num_error);
 
