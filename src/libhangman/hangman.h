@@ -19,7 +19,7 @@ enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
 enum { WIN = 1, LOSE = 2 };
 
-enum { MAXLENGTH = 255 };
+enum { MAXLENGTH = 255, INITIALSIZE = 200 };
 
 enum { INCORTHEME = -1 };
 

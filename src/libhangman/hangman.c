@@ -182,7 +182,7 @@ char** open_dir(int* value_dic, int* num_error, char* path)
         return NULL;
     }
 
-    *value_dic = 200;
+    *value_dic = INITIALSIZE;
     char** dic_name = (char**)malloc((*value_dic) * sizeof(char*));
     if (dic_name == NULL) {
         closedir(dir);
@@ -238,7 +238,7 @@ char** get_words_array(int* value_words, char path[], int* num_error)
         return NULL;
     }
 
-    *value_words = 200;
+    *value_words = INITIALSIZE;
     char** words = (char**)malloc((*value_words) * sizeof(char*));
     if (words == NULL) {
         fclose(fp);
