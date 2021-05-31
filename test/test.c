@@ -92,7 +92,7 @@ CTEST(Get_words_array, Get_words_array_work)
 {
     int value_words;
     int num_error;
-    char* path[] = {"dictionary/animals.txt", "dictionary/error.dat"};
+    char* path[] = {"../dictionary/animals.txt", "../dictionary/error.dat"};
     int exp[] = {WITHOUTERROR, CANTOPENFILE};
 
     for (int i = 0; i < 2; i++) {
@@ -133,7 +133,7 @@ CTEST(Fill_arr, Fill)
 CTEST(Open_dir, Open_dir_work)
 {
     int value_dic, num_error;
-    char* dir_path[] = {"dictionary", "dictionaaary"};
+    char* dir_path[] = {"../dictionary", "../dictionaaary"};
     int exp[] = {WITHOUTERROR, CANTOPENDIR};
     for (int i = 0; i < 2; i++) {
         open_dir(&value_dic, &num_error, dir_path[i]);
