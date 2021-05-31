@@ -362,11 +362,11 @@ int play_game(char guessed_word[], char hidden_word[], int length)
     char used_ch[26];
     int used_ch_end = 0;
 
-    while (num_guess_ch >= 0 || num_error <= 9) {
+    while (num_guess_ch >= 0 || num_error <= MAXERROR) {
         system("clear");
         print_hangman(num_error);
 
-        if (num_error == 9) {
+        if (num_error == MAXERROR) {
             printf("\t%s\n", guessed_word);
         } else {
             printf("\t%s\n", hidden_word);
@@ -381,7 +381,7 @@ int play_game(char guessed_word[], char hidden_word[], int length)
             printf("\n\nYou win!\n");
             return WIN;
         }
-        if (num_error == 9) {
+        if (num_error == MAXERROR) {
             printf("\n\nYou lose!\n");
             return LOSE;
         }

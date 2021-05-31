@@ -17,7 +17,7 @@ enum { WITHPOINT = -1, WITHOUTPOINT = 0 };
 
 enum { USEDLETTER = -1, UNUSEDLETTER = 0 };
 
-enum { WIN = 1, LOSE = 2 };
+enum { MAXERROR = 9, WIN = 1, LOSE = 2 };
 
 enum { MAXLENGTH = 255, INITIALSIZE = 200 };
 
