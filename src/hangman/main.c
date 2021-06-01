@@ -40,7 +40,7 @@ int main()
 
         int value_words;
         char** words = get_words_array(&value_words, path, &num_error);
-        free(path);
+        // free(path);
         if (check_error(num_error) != WITHOUTERROR) {
             return num_error;
         }
